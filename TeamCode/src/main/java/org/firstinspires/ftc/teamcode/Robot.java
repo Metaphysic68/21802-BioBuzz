@@ -59,6 +59,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            telemetry.addData("Elevator Target", elevator.getTargetPosition());
+            telemetry.addData("Elevator Position", elevator.getCurrentPosition());
+            telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
         }
         super.run();

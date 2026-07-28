@@ -19,19 +19,11 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
         public static double kF = -0.0005;
     }
 
-    @Config
-    public static class Setpoints {
-        public static int CLIMB = 1;
-        public static int SAVE = 0;
-    }
 
-    // Tune these to your elevator's real travel range so it can never
-    // be commanded to slam into the top or bottom of the slides.
     public static int MIN_POSITION = 0;
     public static int MAX_POSITION = 3000;
 
-    // Max change in setpoint per periodic() cycle — this smooths the motion
-    // instead of asking the PID to jump straight to a far-away target.
+
     public static double MAX_TICKS_PER_CYCLE = 15;
 
     private final PIDFController pid = new PIDFController(
@@ -41,8 +33,8 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
     private final DcMotor motor2;
     private final Telemetry telemetry;
 
-    private int targetPosition = 0;      // where we ultimately want to be
-    private double profiledPosition = 0; // ramped intermediate goal the PID chases a
+    private int targetPosition = 0;
+    private double profiledPosition = 0;
 
     public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -66,7 +58,6 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
         targetPosition = 0;
     }
 
-    /** Commands the elevator to an arbitrary tick position, clamped to safe limits. */
     public void setTargetPosition(int ticks) {
         targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, ticks));
     }
@@ -94,7 +85,6 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
         pid.setD(PIDConstants.kD);
         pid.setF(PIDConstants.kF);
 
-        // Ramp toward the target instead of jumping straight to it
         if (profiledPosition < targetPosition) {
             profiledPosition = Math.min(targetPosition, profiledPosition + MAX_TICKS_PER_CYCLE);
         } else if (profiledPosition > targetPosition) {
