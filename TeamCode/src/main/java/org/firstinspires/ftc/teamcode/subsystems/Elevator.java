@@ -42,7 +42,7 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
     private final Telemetry telemetry;
 
     private int targetPosition = 0;      // where we ultimately want to be
-    private double profiledPosition = 0; // ramped intermediate goal the PID chases
+    private double profiledPosition = 0; // ramped intermediate goal the PID chases a
 
     public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
