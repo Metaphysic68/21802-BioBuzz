@@ -25,8 +25,9 @@ public class Elevator extends SubsystemBase{
     private final DcMotor elevator1;
     private final DcMotor elevator2;
     private final Telemetry telemetry;
-
     private int targetPosition = 0;
+    private double profiledPosition = 0;
+    public static double vel = 20;
 
     public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -78,8 +79,13 @@ public class Elevator extends SubsystemBase{
         pid.setD(PIDConstants.kD);
         pid.setF(PIDConstants.kF);
 
+        if (profiledPosition < targetPosition) {
+            profiledPosition = Math.min(targetPosition, profiledPosition + vel);
+        } else if (profiledPosition > targetPosition) {
+            profiledPosition = Math.max(targetPosition, profiledPosition - vel);
+        }
 
-        double power = pid.calculate(getPos(), targetPosition);
+        double power = pid.calculate(getPos(), profiledPosition);
 
         if (getPos() < 20 && targetPosition < 20) {
             elevator1.setPower(0);
