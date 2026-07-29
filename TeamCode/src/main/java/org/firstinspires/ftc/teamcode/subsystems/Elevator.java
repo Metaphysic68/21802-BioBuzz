@@ -9,71 +9,64 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Elevator extends SubsystemBase implements AnyPIDmotor {
+public class Elevator extends SubsystemBase{
 
     @Config
     public static class PIDConstants {
-        public static double kP = 0.05;
+        public static double kP = 0.0099;
         public static double kI = 0;
-        public static double kD = 0;
-        public static double kF = -0.0005;
+        public static double kD = 0.00000000000005;
+        public static double kF = 0.05;
     }
-
-
-    public static int MIN_POSITION = 0;
-    public static int MAX_POSITION = 3000;
-
-
-    public static double MAX_TICKS_PER_CYCLE = 15;
 
     private final PIDFController pid = new PIDFController(
             PIDConstants.kP, PIDConstants.kI, PIDConstants.kD, PIDConstants.kF);
 
-    private final DcMotor motor1;
-    private final DcMotor motor2;
+    private final DcMotor elevator1;
+    private final DcMotor elevator2;
     private final Telemetry telemetry;
 
     private int targetPosition = 0;
-    private double profiledPosition = 0;
 
     public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
+
+
+        elevator1 = hardwareMap.get(DcMotor.class, "elevator");
+        elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        elevator1.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        elevator2 = hardwareMap.get(DcMotor.class, "elevator2");
+        elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elevator1.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+
+        resetEncoders(); //remove for match
         pid.setTolerance(20);
+        pid.setPIDF(PIDConstants.kP,PIDConstants.kI,PIDConstants.kD,PIDConstants.kF);
 
-        motor1 = hardwareMap.get(DcMotor.class, "elevator");
-        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        motor2 = hardwareMap.get(DcMotor.class, "elevator2");
-        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void resetEncoders() {
-        motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        profiledPosition = 0;
+        elevator1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevator2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevator1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elevator2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         targetPosition = 0;
     }
 
     public void setTargetPosition(int ticks) {
-        targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, ticks));
+        targetPosition = ticks;
     }
-    @Override
-    public void setSetpoint(int ticks) {
-        setTargetPosition(ticks);
-    }
-
     public int getTargetPosition() {
         return targetPosition;
     }
-
-    public int getCurrentPosition() {
-        return motor1.getCurrentPosition();
+    public int getPos() {
+        return elevator1.getCurrentPosition();
     }
-
     public boolean isAtTarget() {
         return pid.atSetPoint();
     }
@@ -85,25 +78,19 @@ public class Elevator extends SubsystemBase implements AnyPIDmotor {
         pid.setD(PIDConstants.kD);
         pid.setF(PIDConstants.kF);
 
-        if (profiledPosition < targetPosition) {
-            profiledPosition = Math.min(targetPosition, profiledPosition + MAX_TICKS_PER_CYCLE);
-        } else if (profiledPosition > targetPosition) {
-            profiledPosition = Math.max(targetPosition, profiledPosition - MAX_TICKS_PER_CYCLE);
+
+        double power = pid.calculate(getPos(), targetPosition);
+
+        if (getPos() < 20 && targetPosition < 20) {
+            elevator1.setPower(0);
+            elevator2.setPower(0);
+        } else {
+            elevator1.setPower(power);
+            elevator2.setPower(power);
         }
 
-        double power = pid.calculate(getCurrentPosition(), profiledPosition);
-        power = Math.max(-1, Math.min(1, power));
 
-        motor1.setPower(power);
-        motor2.setPower(power);
 
-        telemetry.addData("Elevator Target", targetPosition);
-        telemetry.addData("Elevator Position", getCurrentPosition());
-        telemetry.addData("Elevator At Target", isAtTarget());
     }
 
-    @Override
-    public DcMotor getMotorRotate() {
-        return motor1;
-    }
 }

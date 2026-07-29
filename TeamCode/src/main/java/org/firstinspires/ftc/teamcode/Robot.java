@@ -49,7 +49,6 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     }
 
 
-
     @Override
     public void run() {
         if (follower != null) {
@@ -60,7 +59,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             telemetry.addData("Elevator Target", elevator.getTargetPosition());
-            telemetry.addData("Elevator Position", elevator.getCurrentPosition());
+            telemetry.addData("Elevator Position", elevator.getPos());
             telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
         }
