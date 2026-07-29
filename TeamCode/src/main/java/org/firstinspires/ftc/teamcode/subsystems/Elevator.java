@@ -15,7 +15,7 @@ public class Elevator extends SubsystemBase{
     public static class PIDConstants {
         public static double kP = 0.0099;
         public static double kI = 0;
-        public static double kD = 0.00000000000005;
+        public static double kD = 0;
         public static double kF = 0.05;
     }
 
@@ -86,14 +86,8 @@ public class Elevator extends SubsystemBase{
         }
 
         double power = pid.calculate(getPos(), profiledPosition);
-
-        if (getPos() < 20 && targetPosition < 20) {
-            elevator1.setPower(0);
-            elevator2.setPower(0);
-        } else {
-            elevator1.setPower(power);
-            elevator2.setPower(power);
-        }
+        elevator1.setPower(power);
+        elevator2.setPower(power);
 
 
 
