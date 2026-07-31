@@ -43,7 +43,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void configureButtons() {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new ElevatorCommand(elevator, 1500))
+                .whenActive(new ElevatorCommand(elevator, 1200))
                 .whenInactive(new ElevatorCommand(elevator, 0));
 
     }

@@ -13,10 +13,10 @@ public class Elevator extends SubsystemBase{
 
     @Config
     public static class PIDConstants {
-        public static double kP = 0.0099;
+        public static double kP = 0.017;
         public static double kI = 0;
         public static double kD = 0;
-        public static double kF = 0.05;
+        public static double kF = 0;
     }
 
     private final PIDFController pid = new PIDFController(
@@ -27,7 +27,7 @@ public class Elevator extends SubsystemBase{
     private final Telemetry telemetry;
     private int targetPosition = 0;
     private double profiledPosition = 0;
-    public static double vel = 20;
+    public static double vel = 50;
 
     public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
