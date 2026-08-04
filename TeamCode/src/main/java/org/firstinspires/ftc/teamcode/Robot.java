@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -8,9 +10,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
+import org.firstinspires.ftc.teamcode.commands.RunIntake;
+import org.firstinspires.ftc.teamcode.commands.SetStopperPosition;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Stopper;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
+import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public static boolean isAutoAligned;
@@ -20,8 +27,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public static GamepadEx OperatorGamepad;
     public Follower follower;
     public Elevator elevator;
+    public Stopper stopper;
+    public Intake intake;
     public static boolean isRedAlliance;
-
 
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
         this.hMap = hMap;
@@ -36,18 +44,28 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.createFollower(hMap);
+        stopper  = new Stopper(this);
+        intake   = new Intake(this);
         elevator = new Elevator(hMap, telemetry);
         register(elevator);
-
     }
 
     private void configureButtons() {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new ElevatorCommand(elevator, 1200))
+                .whenActive(new ParallelCommandGroup(
+                        new ElevatorCommand(elevator, 1200),
+                        new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN)
+                ))
                 .whenInactive(new ElevatorCommand(elevator, 0));
 
-    }
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+                .whileActiveOnce(new ParallelCommandGroup(
+                        new RunIntake(intake, RobotConstants.Intake.SPEED_INTAKE),
+                        new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
+                ));
 
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.Y);
+    }
 
     @Override
     public void run() {
