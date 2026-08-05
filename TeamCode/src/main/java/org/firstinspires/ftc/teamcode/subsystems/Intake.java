@@ -12,7 +12,7 @@ public class Intake extends SubsystemBase {
 
     public Intake(Robot bot) {
         intakeMotor = bot.hMap.get(DcMotorEx.class, RobotConstants.Intake.MOTOR1_ID_STRING);
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     private void setPow(double vel){
