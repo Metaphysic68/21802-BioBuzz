@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Trapdoor;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
@@ -19,7 +22,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     public Follower follower;
-    public Elevator elevator;
+   // public Elevator elevator;
+    public Intake intake;
+    //public Trapdoor trapdoor;
     public static boolean isRedAlliance;
 
 
@@ -36,15 +41,31 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.createFollower(hMap);
-        elevator = new Elevator(hMap, telemetry);
-        register(elevator);
+       //elevator = new Elevator(hMap, telemetry);
+        intake = new Intake(hMap,telemetry);
+        //trapdoor = new Trapdoor(hMap,telemetry);
+
+        //register(elevator);
+        //register(intake);
+        //register(trapdoor);
 
     }
 
     private void configureButtons() {
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
+        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ElevatorCommand(elevator, 1200))
-                .whenInactive(new ElevatorCommand(elevator, 0));
+                .whenInactive(new ElevatorCommand(elevator, 0));*/
+
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+                .whenActive(new InstantCommand(()-> intake.setPower(1)))
+                .whenInactive(new InstantCommand(()->intake.setPower(0)));
+
+        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
+                .whenActive(new InstantCommand(()-> trapdoor.setPos(1)))
+                .whenInactive(new InstantCommand(()->trapdoor.setPos(0)));*/
+
+
+
 
     }
 
@@ -58,9 +79,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
-            telemetry.addData("Elevator Target", elevator.getTargetPosition());
-            telemetry.addData("Elevator Position", elevator.getPos());
-            telemetry.addData("Elevator At Target", elevator.isAtTarget());
+            //telemetry.addData("Elevator Target", elevator.getTargetPosition());
+            //telemetry.addData("Elevator Position", elevator.getPos());
+           // telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
         }
         super.run();
