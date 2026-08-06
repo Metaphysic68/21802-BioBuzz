@@ -11,10 +11,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 // org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.commands.RunIntake;
+import org.firstinspires.ftc.teamcode.commands.RunOuttake;
 //import org.firstinspires.ftc.teamcode.commands.SetStopperPosition;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 //import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 //import org.firstinspires.ftc.teamcode.subsystems.Stopper;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
@@ -26,9 +28,10 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     public Follower follower;
-  //  public Elevator elevator;
-   // public Stopper stopper;
+    //  public Elevator elevator;
+    // public Stopper stopper;
     public Intake intake;
+    public Outtake outtake;
     public static boolean isRedAlliance;
 
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
@@ -44,8 +47,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.createFollower(hMap);
-      //  stopper  = new Stopper(this);
+        //  stopper  = new Stopper(this);
         intake   = new Intake(this);
+        outtake  = new Outtake(this);
         //elevator = new Elevator(hMap, telemetry);
         //register(elevator);
     }
@@ -53,16 +57,17 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     private void configureButtons() {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ParallelCommandGroup(
-                      //  new ElevatorCommand(elevator, 1200),
+                        //  new ElevatorCommand(elevator, 1200),
                         //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN)
                 ));
-                //.whenInactive(new ElevatorCommand(elevator, 0));
+        //.whenInactive(new ElevatorCommand(elevator, 0));
 
 
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whileActiveOnce(new ParallelCommandGroup(
-                        new RunIntake(intake, RobotConstants.Intake.SPEED_INTAKE)
+                        new RunIntake(intake, RobotConstants.Intake.SPEED_INTAKE),
+                        new RunOuttake(outtake, RobotConstants.Outtake.SPEED_OUTTAKE)
                         //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
                 ));
     }
@@ -76,9 +81,9 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
-          //  telemetry.addData("Elevator Target", elevator.getTargetPosition());
-         //   telemetry.addData("Elevator Position", elevator.getPos());
-          //  telemetry.addData("Elevator At Target", elevator.isAtTarget());
+            //  telemetry.addData("Elevator Target", elevator.getTargetPosition());
+            //   telemetry.addData("Elevator Position", elevator.getPos());
+            //  telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
         }
         super.run();
