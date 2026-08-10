@@ -26,4 +26,8 @@ public class Outtake extends SubsystemBase {
     public void stop() {
         setPow(0);
     }
+
+    public double getPower() {
+        return outtakeMotor.getPower();
+    }
 }
