@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -80,9 +81,13 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
         if (follower != null) {
             follower.update();
 
-            telemetry.addData("Chassis X", "%.4f", follower.getPose().getX());
-            telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
-            telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
+            Pose currentPose = follower.getPose();
+
+            telemetry.addData("RobotPose", new double[]{currentPose.getX(), currentPose.getY(), currentPose.getHeading()});
+
+            telemetry.addData("Chassis X", "%.4f", currentPose.getX());
+            telemetry.addData("Chassis Y", "%.4f", currentPose.getY());
+            telemetry.addData("Chassis Heading", "%.6f", currentPose.getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             telemetry.addData("Elevator Target", elevator.getTargetPosition());
             telemetry.addData("Elevator Position", elevator.getPos());
