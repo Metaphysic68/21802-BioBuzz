@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.arcrobotics.ftclib.kotlin.extensions.gamepad.GamepadExExtKt.whenInactive;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -62,6 +63,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ParallelCommandGroup(
                         new ElevatorCommand(elevator, 1200)
+
                         //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN)
                 ))
                 .whenInactive(new ElevatorCommand(elevator, 0));
@@ -74,6 +76,11 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         new RunOuttake(outtake, RobotConstants.Outtake.SPEED_OUTTAKE)
                         //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
                 ));
+
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.Y)
+                .whileActiveOnce(new InstantCommand(() -> follower.setPose(isRedAlliance
+                        ? new Pose(56, 99, 0)
+                        : new Pose(144 - 56, 99, Math.PI))));
     }
 
     @Override
