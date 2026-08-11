@@ -4,12 +4,16 @@ import static com.arcrobotics.ftclib.kotlin.extensions.gamepad.GamepadExExtKt.wh
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,6 +22,7 @@ import org.firstinspires.ftc.teamcode.commands.RunIntake;
 import org.firstinspires.ftc.teamcode.commands.RunOuttake;
 //import org.firstinspires.ftc.teamcode.commands.SetStopperPosition;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedroPathing.FieldLocations;
 //import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -81,6 +86,51 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                 .whileActiveOnce(new InstantCommand(() -> follower.setPose(isRedAlliance
                         ? new Pose(56, 99, 0)
                         : new Pose(144 - 56, 99, Math.PI))));
+
+
+//botnes de auto aling
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.X)
+                .whenPressed(new SequentialCommandGroup(
+                        new InstantCommand(this::prepareNewTask),
+                        new InstantCommand(() -> {
+                            isAutoAligned = true;
+                            Pose current = follower.getPose();
+                            Pose target  = FieldLocations.AutoStraight.StartPose;
+                            Path path = new Path(new BezierLine(current, target));
+                            path.setLinearHeadingInterpolation(current.getHeading(), target.getHeading());
+                            follower.followPath(path, true);
+                        }),
+                        new WaitUntilCommand(() -> !follower.isBusy()),
+                        new InstantCommand(() -> {
+                            isAutoAligned = false;
+                            follower.startTeleopDrive(true);
+                        })
+                ));
+
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.A)
+                .whenPressed(new SequentialCommandGroup(
+                        new InstantCommand(this::prepareNewTask),
+                        new InstantCommand(() -> {
+                            isAutoAligned = true;
+                            Pose current = follower.getPose();
+                            Pose target  = FieldLocations.AutoStraight.Intake;
+                            Path path = new Path(new BezierLine(current, target));
+                            path.setLinearHeadingInterpolation(current.getHeading(), target.getHeading());
+                            follower.followPath(path, true);
+                        }),
+                        new WaitUntilCommand(() -> !follower.isBusy()),
+                        new InstantCommand(() -> {
+                            isAutoAligned = false;
+                            follower.startTeleopDrive(true);
+                        })
+                ));
+    }
+    //ola
+
+    public void prepareNewTask() {
+        follower.breakFollowing();
+        follower.startTeleopDrive(true);
+        isAutoAligned = false;
     }
 
     @Override
