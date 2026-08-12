@@ -43,7 +43,6 @@ public class Drive extends CommandOpMode {
             hasStarted = true;
         }
 
-        super.run();
         bot.run();
 
 

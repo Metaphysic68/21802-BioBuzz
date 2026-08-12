@@ -31,7 +31,6 @@ public class AutoStraight extends LinearOpMode {
         }
 
         while (opModeIsActive() && !isStopRequested()) {
-            CommandScheduler.getInstance().run();
             bot.run();
 
             PoseStorage.currentPose = bot.follower.getPose();

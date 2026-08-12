@@ -88,7 +88,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         : new Pose(144 - 56, 99, Math.PI))));
 
 
-//botnes de auto aling
+
         new GamepadButton(DriverGamepad, GamepadKeys.Button.X)
                 .whenPressed(new SequentialCommandGroup(
                         new InstantCommand(this::prepareNewTask),
