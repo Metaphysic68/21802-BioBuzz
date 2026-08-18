@@ -19,6 +19,7 @@ public class RobotConstants {
     public static class Stopper {
         public static final String SERVO_ID_STRING = "Stopper";
         public static double POSITION_CLOSED = 0;
+        public static double POSITION_OPEN = 1;
 
     }
 }
