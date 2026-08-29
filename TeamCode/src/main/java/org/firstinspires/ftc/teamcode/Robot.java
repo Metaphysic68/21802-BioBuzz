@@ -54,15 +54,20 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     private void configureButtons() {
         /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ElevatorCommand(elevator, 1200))
-                .whenInactive(new ElevatorCommand(elevator, 0));*/
+                .whenInactive(new ElevatorCommand(elevator, 0));ol*/
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(()-> intake.setPower(1)))
                 .whenInactive(new InstantCommand(()->intake.setPower(0)));
 
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
+                .whenActive(new InstantCommand(()-> intake.setPower(-1)))
+                .whenInactive(new InstantCommand(()->intake.setPower(0)));
+
         /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(()-> trapdoor.setPos(1)))
                 .whenInactive(new InstantCommand(()->trapdoor.setPos(0)));*/
+
 
 
 

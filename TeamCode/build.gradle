@@ -19,10 +19,58 @@ android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
-        jniLibs.useLegacyPackaging true
+        resources {
+            excludes += [
+                    'META-INF/DEPENDENCIES',
+                    'META-INF/LICENSE',
+                    'META-INF/LICENSE.txt',
+                    'META-INF/NOTICE',
+                    'META-INF/NOTICE.txt',
+                    'META-INF/*.kotlin_module',
+                    'META-INF/INDEX.LIST'
+            ]
+            pickFirsts += [
+                    'META-INF/*'
+            ]
+        }
+        jniLibs {
+            pickFirsts += ['**/*.so']
+        }
     }
 }
 
 dependencies {
     implementation project(':FtcRobotController')
 }
+
+// pusher extreme: begin - team code is reloaded, not packaged
+//
+// Remove this block, or run the menu entry that added it, to go back to
+// packaging team code in the APK.
+//
+// Kept in the APK anyway: nothing
+android {
+    sourceSets {
+        main {
+            java {
+                exclude { details ->
+                    def path = details.path
+                    !details.directory &&
+                        path.startsWith('org/firstinspires/ftc/teamcode/')
+                }
+            }
+        }
+    }
+}
+
+// The Kotlin plugin compiles from its own source set, which the exclusion
+// above does not reach. Without this, .kt files stay in the APK and the reload
+// is overruled by them.
+tasks.matching { it.name.startsWith('compile') && it.name.endsWith('Kotlin') }.configureEach {
+    exclude { details ->
+        def path = details.path
+        !details.directory &&
+            path.startsWith('org/firstinspires/ftc/teamcode/')
+    }
+}
+// pusher extreme: end

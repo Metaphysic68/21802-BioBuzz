@@ -42,7 +42,7 @@ public class Limelight {
         try {
             limelight.pipelineSwitch(newIndex);
             Log.i("Limelight", "Switched to pipeline " + newIndex);
-        } catch (Exception e) {
+        } catch (Exception e)  {
             Log.e("Limelight", "Failed to switch pipeline: " + e.getMessage());
         }
     }
