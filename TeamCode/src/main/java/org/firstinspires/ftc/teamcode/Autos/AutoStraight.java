@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autos;
+/*package org.firstinspires.ftc.teamcode.Autos;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.commands.AutoStraightRutine;
 import org.firstinspires.ftc.teamcode.pedroPathing.FieldLocations;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.commands.RunIntake;
 
 @Autonomous(name = "AutoStraight", group = "Autos", preselectTeleOp = "Drive")
 public class AutoStraight extends LinearOpMode {
@@ -27,7 +29,7 @@ public class AutoStraight extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            CommandScheduler.getInstance().schedule(new AutoStraightRutine(bot.follower, bot.intake));
+            CommandScheduler.getInstance().schedule(new AutoStraightRutine(bot.follower,bot.Intake));
         }
 
         while (opModeIsActive() && !isStopRequested()) {
@@ -39,4 +41,6 @@ public class AutoStraight extends LinearOpMode {
 
         CommandScheduler.getInstance().reset();
     }
-}
+}}
+
+ */
