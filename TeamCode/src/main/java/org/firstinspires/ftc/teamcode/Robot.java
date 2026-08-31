@@ -36,7 +36,7 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public final HardwareMap hMap;
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
-    public static GamepadEx OperatorGamepad;
+    public static GamepadEx OperatorGamepad; 
     public Follower follower;
    // public Elevator elevator;
     // public Stopper stopper;
