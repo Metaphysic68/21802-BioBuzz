@@ -32,16 +32,18 @@ import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
-    public static boolean isAutoAligned;
+    public static boolean isAutoAligned = false;
+    public static boolean lockHeadingToZero = false;
+
     public final HardwareMap hMap;
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
-    public static GamepadEx OperatorGamepad; 
+    public static GamepadEx OperatorGamepad;
     public Follower follower;
-   // public Elevator elevator;
+    // public Elevator elevator;
     // public Stopper stopper;
-   // public Intake intake;
-  //  public Outtake outtake;
+    // public Intake intake;
+    // public Outtake outtake;
     public static boolean isRedAlliance;
 
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
@@ -53,34 +55,33 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
         initSubsystems();
         configureButtons();
+
+        if (PoseStorage.currentPose != null) {
+            follower.setPose(PoseStorage.currentPose);
+        }
     }
 
     private void initSubsystems() {
         follower = Constants.createFollower(hMap);
-        //  stopper  = new Stopper(this);
-     //   intake   = new Intake(this);
-       // outtake  = new Outtake(this);
-       // elevator = new Elevator(hMap, telemetry);
-      //  register(elevator);
+        // stopper  = new Stopper(this);
+        // intake   = new Intake(this);
+        // outtake  = new Outtake(this);
+        // elevator = new Elevator(hMap, telemetry);
+        // register(elevator);
     }
 
     private void configureButtons() {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ParallelCommandGroup(
-                 //       new ElevatorCommand(elevator, 1200)
-
-                        //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN)
+                        // new ElevatorCommand(elevator, 1200)
+                        // new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN)
                 ));
-              //  .whenInactive(new ElevatorCommand(elevator, 0));
-      //  .whenInactive(new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_OPEN);
-
-
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whileActiveOnce(new ParallelCommandGroup(
-                    //    new RunIntake(intake, RobotConstants.Intake.SPEED_INTAKE),
-                     //   new RunOuttake(outtake, RobotConstants.Outtake.SPEED_OUTTAKE)
-                        //new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
+                        // new RunIntake(intake, RobotConstants.Intake.SPEED_INTAKE),
+                        // new RunOuttake(outtake, RobotConstants.Outtake.SPEED_OUTTAKE)
+                        // new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
                 ));
 
         new GamepadButton(DriverGamepad, GamepadKeys.Button.Y)
@@ -88,49 +89,14 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         ? new Pose(56, 99, 0)
                         : new Pose(144 - 56, 99, Math.PI))));
 
-
-
-        new GamepadButton(DriverGamepad, GamepadKeys.Button.X)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(this::prepareNewTask),
-                        new InstantCommand(() -> {
-                            isAutoAligned = true;
-                            Pose current = follower.getPose();
-                            Pose target  = FieldLocations.AutoStraight.StartPose;
-                            Path path = new Path(new BezierLine(current, target));
-                            path.setLinearHeadingInterpolation(current.getHeading(), target.getHeading());
-                            follower.followPath(path, true);
-                        }),
-                        new WaitUntilCommand(() -> !follower.isBusy()),
-                        new InstantCommand(() -> {
-                            isAutoAligned = false;
-                            follower.startTeleopDrive(true);
-                        })
-                ));
-
         new GamepadButton(DriverGamepad, GamepadKeys.Button.A)
-                .whenPressed(new SequentialCommandGroup(
-                        new InstantCommand(this::prepareNewTask),
-                        new InstantCommand(() -> {
-                            isAutoAligned = true;
-                            Pose current = follower.getPose();
-                            Pose target  = FieldLocations.AutoStraight.Intake;
-                            Path path = new Path(new BezierLine(current, target));
-                            path.setLinearHeadingInterpolation(current.getHeading(), target.getHeading());
-                            follower.followPath(path, true);
-                        }),
-                        new WaitUntilCommand(() -> !follower.isBusy()),
-                        new InstantCommand(() -> {
-                            isAutoAligned = false;
-                            follower.startTeleopDrive(true);
-                        })
-                ));
+                .whenActive(new InstantCommand(() -> lockHeadingToZero = true))
+                .whenInactive(new InstantCommand(() -> lockHeadingToZero = false));
     }
-    //ola
 
     public void prepareNewTask() {
         follower.breakFollowing();
-        follower.startTeleopDrive(true);
+        follower.startTeleopDrive();
         isAutoAligned = false;
     }
 
@@ -147,14 +113,14 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Y", "%.4f", currentPose.getY());
             telemetry.addData("Chassis Heading", "%.6f", currentPose.getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            telemetry.addData("Auto Aligned", isAutoAligned);
+            telemetry.addData("Heading Locked", lockHeadingToZero);
 
-          //  telemetry.addData("Elevator Target", elevator.getTargetPosition());
-         //   telemetry.addData("Elevator Position", elevator.getPos());
-         //   telemetry.addData("Elevator At Target", elevator.isAtTarget());
-
-         //   telemetry.addData("Intake Power", intake.getPower());
-           // telemetry.addData("Outtake Power", outtake.getPower());
-
+            // telemetry.addData("Elevator Target", elevator.getTargetPosition());
+            // telemetry.addData("Elevator Position", elevator.getPos());
+            // telemetry.addData("Elevator At Target", elevator.isAtTarget());
+            // telemetry.addData("Intake Power", intake.getPower());
+            // telemetry.addData("Outtake Power", outtake.getPower());
             // telemetry.addData("Stopper Status", stopper);
 
             telemetry.update();

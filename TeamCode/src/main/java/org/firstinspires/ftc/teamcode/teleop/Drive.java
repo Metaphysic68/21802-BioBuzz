@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 public class Drive extends CommandOpMode {
 
     private Robot bot;
-    private boolean hasStarted = false;
 
     @Override
     public void initialize() {
@@ -29,22 +28,18 @@ public class Drive extends CommandOpMode {
         bot.isRedAlliance = PoseStorage.isRedAlliance;
 
         if (PoseStorage.currentPose != null) {
-            bot.follower.setStartingPose(PoseStorage.currentPose);
+            bot.follower.setPose(PoseStorage.currentPose);
             PoseStorage.currentPose = null;
         } else {
-            bot.follower.setStartingPose(bot.isRedAlliance ? new Pose(0,0,0) : new Pose(0,0,Math.toRadians(180)));
+            bot.follower.setPose(bot.isRedAlliance ? new Pose(0, 0, 0) : new Pose(0, 0, Math.toRadians(180)));
         }
+
+        bot.follower.startTeleopDrive();
     }
 
     @Override
     public void run() {
-        if (!hasStarted) {
-            bot.follower.startTeleopDrive(true);
-            hasStarted = true;
-        }
-
         bot.run();
-
 
         double fwd;
         double lat;
@@ -60,9 +55,8 @@ public class Drive extends CommandOpMode {
             rot = -gamepad1.right_stick_x;
         }
 
-        if (!Robot.isAutoAligned){
+        if (!Robot.isAutoAligned) {
             bot.follower.setTeleOpDrive(fwd, lat, rot, false);
         }
-
     }
 }
