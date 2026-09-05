@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDFController;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 
-public class Elevator extends SubsystemBase{
+public class Elevator extends SubsystemBase {
 
     @Config
     public static class PIDConstants {
@@ -24,24 +26,22 @@ public class Elevator extends SubsystemBase{
 
     private final DcMotor elevator1;
     private final DcMotor elevator2;
-    private final Telemetry telemetry;
     private int targetPosition = 0;
     private double profiledPosition = 0;
     public static double vel = 50;
 
-    public Elevator(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public Elevator(HardwareMap hardwareMap) {
 
 
 
-        elevator1 = hardwareMap.get(DcMotor.class, "elevator");
+        elevator1 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "elevator1"));
         elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         elevator1.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        elevator2 = hardwareMap.get(DcMotor.class, "elevator2");
+        elevator2 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "elevator2"));
         elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevator1.setDirection(DcMotorSimple.Direction.FORWARD);
+        elevator2.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 

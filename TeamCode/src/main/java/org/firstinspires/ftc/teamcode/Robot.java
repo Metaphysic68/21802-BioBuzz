@@ -1,31 +1,31 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.button.Trigger;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.commands.ElevatorCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Trapdoor;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
-public class Robot extends com.arcrobotics.ftclib.command.Robot {
+import java.util.List;
+
+public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static boolean isAutoAligned;
     public final HardwareMap hMap;
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     public Follower follower;
-   // public Elevator elevator;
-    public Intake intake;
+    //public Elevator elevator;
+    //public Intake intake;
     //public Trapdoor trapdoor;
     public static boolean isRedAlliance;
+    private List<LynxModule> hubs;
+    private final Timer loop = new Timer();
+    public double loops = 0, lastLoop = 0, loopTime = 0;
 
 
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
@@ -41,9 +41,15 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.createFollower(hMap);
-       //elevator = new Elevator(hMap, telemetry);
-        intake = new Intake(hMap,telemetry);
+        //elevator = new Elevator(hMap, telemetry);
+        //intake = new Intake(hMap,telemetry);
         //trapdoor = new Trapdoor(hMap,telemetry);
+
+        hubs = hMap.getAll(LynxModule.class);
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
 
         //register(elevator);
         //register(intake);
@@ -56,13 +62,13 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                 .whenActive(new ElevatorCommand(elevator, 1200))
                 .whenInactive(new ElevatorCommand(elevator, 0));ol*/
 
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(()-> intake.setPower(1)))
                 .whenInactive(new InstantCommand(()->intake.setPower(0)));
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(()-> intake.setPower(-1)))
-                .whenInactive(new InstantCommand(()->intake.setPower(0)));
+                .whenInactive(new InstantCommand(()->intake.setPower(0)));*/
 
         /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(()-> trapdoor.setPos(1)))
@@ -74,19 +80,34 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
 
     }
 
+    public double getLoopTimeHz() {
+        return 1000 / loopTime;
+    }
+
 
     @Override
     public void run() {
         if (follower != null) {
+
+            loops++;
+
+            if (loops > 10) {
+                double now = loop.getElapsedTime();
+                loopTime = (now - lastLoop) / loops;
+                lastLoop = now;
+                loops = 0;
+            }
             follower.update();
 
             telemetry.addData("Chassis X", "%.4f", follower.getPose().getX());
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
+            telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
+            telemetry.addData("LoopTime Hz", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             //telemetry.addData("Elevator Target", elevator.getTargetPosition());
             //telemetry.addData("Elevator Position", elevator.getPos());
-           // telemetry.addData("Elevator At Target", elevator.isAtTarget());
+            //telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
         }
         super.run();
