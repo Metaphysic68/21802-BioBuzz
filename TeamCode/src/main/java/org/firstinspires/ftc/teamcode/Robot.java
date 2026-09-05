@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 //import org.firstinspires.ftc.teamcode.commands.RunIntake;
 //import org.firstinspires.ftc.teamcode.commands.RunOuttake;
 //import org.firstinspires.ftc.teamcode.commands.SetStopperPosition;
+import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.commands.SetStopperPosition;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.pedroPathing.FieldLocations;
@@ -33,7 +34,6 @@ import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 
 public class Robot extends com.arcrobotics.ftclib.command.Robot {
     public static boolean isAutoAligned = false;
-    public static boolean lockHeadingToZero = false;
 
     public final HardwareMap hMap;
     public final Telemetry telemetry;
@@ -89,9 +89,8 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         ? new Pose(56, 99, 0)
                         : new Pose(144 - 56, 99, Math.PI))));
 
-        new GamepadButton(DriverGamepad, GamepadKeys.Button.A)
-                .whenActive(new InstantCommand(() -> lockHeadingToZero = true))
-                .whenInactive(new InstantCommand(() -> lockHeadingToZero = false));
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER)
+                .whileHeld(new RotationOnlyAutoAlignCommand(isRedAlliance ? 0 : Math.PI, follower));
     }
 
     public void prepareNewTask() {
@@ -114,7 +113,6 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
             telemetry.addData("Chassis Heading", "%.6f", currentPose.getHeading());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             telemetry.addData("Auto Aligned", isAutoAligned);
-            telemetry.addData("Heading Locked", lockHeadingToZero);
 
             // telemetry.addData("Elevator Target", elevator.getTargetPosition());
             // telemetry.addData("Elevator Position", elevator.getPos());
