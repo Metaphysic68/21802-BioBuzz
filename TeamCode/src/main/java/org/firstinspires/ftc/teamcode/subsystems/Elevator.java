@@ -85,7 +85,7 @@ public class Elevator extends SubsystemBase {
             profiledPosition = Math.max(targetPosition, profiledPosition - vel);
         }
 
-        double power = pid.calculate(getPos(), profiledPosition);
+        double power = pid.calculate(getPos(), profiledPosition) + PIDConstants.kF;
         elevator1.setPower(power);
         elevator2.setPower(power);
 

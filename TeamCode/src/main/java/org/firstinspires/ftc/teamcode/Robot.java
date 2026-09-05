@@ -103,8 +103,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
-            telemetry.addData("LoopTime Hz", getLoopTimeHz());
-            telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
+            telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());            telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             //telemetry.addData("Elevator Target", elevator.getTargetPosition());
             //telemetry.addData("Elevator Position", elevator.getPos());
             //telemetry.addData("Elevator At Target", elevator.isAtTarget());
