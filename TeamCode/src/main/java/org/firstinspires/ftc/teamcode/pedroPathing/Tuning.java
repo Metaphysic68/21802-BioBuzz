@@ -166,7 +166,7 @@ class LocalizationTest extends OpMode {
 
     @Override
     public void start() {
-        follower.startTeleopDrive();
+        follower.startTeleopDrive(true);
         follower.update();
     }
 
@@ -180,7 +180,7 @@ class LocalizationTest extends OpMode {
             debugStringEnabled = !debugStringEnabled;
         }
 
-        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
 
         telemetryM.debug("x:" + follower.getPose().getX());

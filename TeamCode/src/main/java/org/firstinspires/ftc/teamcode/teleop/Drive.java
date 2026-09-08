@@ -28,13 +28,13 @@ public class Drive extends CommandOpMode {
 
         bot = new Robot(hardwareMap, telem, driver, operator);
 
-        bot.isRedAlliance = PoseStorage.isRedAlliance;
+        Robot.isRedAlliance = PoseStorage.isRedAlliance;
 
         if (PoseStorage.currentPose != null) {
             bot.follower.setStartingPose(PoseStorage.currentPose);
             PoseStorage.currentPose = null;
         } else {
-            bot.follower.setStartingPose(bot.isRedAlliance ? new Pose(0,0,0) : new Pose(0,0,Math.toRadians(180)));
+            bot.follower.setStartingPose(Robot.isRedAlliance ? new Pose(0,0,0) : new Pose(0,0,Math.toRadians(180)));
         }
     }
 
@@ -53,7 +53,7 @@ public class Drive extends CommandOpMode {
         double lat;
         double rot;
 
-        if (!bot.isRedAlliance) {
+        if (!Robot.isRedAlliance) {
             fwd = gamepad1.left_stick_y;
             lat = gamepad1.left_stick_x;
             rot = -gamepad1.right_stick_x;

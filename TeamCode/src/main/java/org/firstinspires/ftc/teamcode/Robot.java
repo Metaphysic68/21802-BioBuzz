@@ -4,9 +4,13 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
+import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
@@ -58,6 +62,13 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void configureButtons() {
+        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
+
+        rightBumper.whileHeld(new ConditionalCommand(
+                new RotationOnlyAutoAlignCommand(0, follower),
+                new RotationOnlyAutoAlignCommand(0, follower),
+                () -> isRedAlliance
+        ));
         /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ElevatorCommand(elevator, 1200))
                 .whenInactive(new ElevatorCommand(elevator, 0));ol*/
@@ -97,18 +108,19 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            follower.update();
 
             telemetry.addData("Chassis X", "%.4f", follower.getPose().getX());
             telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
-            telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());            telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
+            telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             //telemetry.addData("Elevator Target", elevator.getTargetPosition());
             //telemetry.addData("Elevator Position", elevator.getPos());
             //telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
+            follower.update();
         }
         super.run();
     }
