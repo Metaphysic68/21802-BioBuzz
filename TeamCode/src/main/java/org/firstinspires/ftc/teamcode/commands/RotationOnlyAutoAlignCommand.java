@@ -45,6 +45,7 @@ public class RotationOnlyAutoAlignCommand extends CommandBase {
 
     @Override
     public void execute() {
+        hController.setPID(kPH, kIH, kDH);
         double currentHeading = follower.getHeading();
 
 

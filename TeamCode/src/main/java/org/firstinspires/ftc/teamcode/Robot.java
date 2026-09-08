@@ -84,13 +84,24 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         // new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
                 ));
 
-        new GamepadButton(DriverGamepad, GamepadKeys.Button.Y)
-                .whileActiveOnce(new InstantCommand(() -> follower.setPose(isRedAlliance
-                        ? new Pose(56, 99, 0)
-                        : new Pose(144 - 56, 99, Math.PI))));
 
         new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER)
                 .whileHeld(new RotationOnlyAutoAlignCommand(isRedAlliance ? 0 : Math.PI, follower));
+
+        new GamepadButton(DriverGamepad, GamepadKeys.Button.Y)
+                .whenActive(new SequentialCommandGroup(
+                        new InstantCommand(() -> {
+                            Pose currentPose = follower.getPose();
+                            Pose targetPose = isRedAlliance
+                                    ? FieldLocations.AutoStraight.Rojo.Intake
+                                    : FieldLocations.AutoStraight.Azul.Intake;
+                            Path path = new Path(new BezierLine(currentPose, targetPose));
+                            path.setLinearHeadingInterpolation(currentPose.getHeading(), targetPose.getHeading());
+                            follower.followPath(path);
+                        }),
+                        new WaitUntilCommand(() -> !follower.isBusy()),
+                        new InstantCommand(() -> follower.startTeleopDrive())
+                ));
     }
 
     public void prepareNewTask() {
