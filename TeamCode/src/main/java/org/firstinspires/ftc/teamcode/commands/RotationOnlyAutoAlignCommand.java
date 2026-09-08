@@ -7,7 +7,6 @@ import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.Robot;
 
 /**
  * A command that uses PID control to hold only the robot's rotation at a specific heading.
@@ -19,7 +18,8 @@ public class RotationOnlyAutoAlignCommand extends CommandBase {
     private final double targetHeading;
     Follower follower;
 
-
+    // --- PID COEFFICIENTS (Tune these values!) ---
+    // Heading PID - reused from PositionHoldCommand
     public static double kPH = 0.45;
     public static double kIH = 0.0;
     public static double kDH = 0.015;
@@ -45,16 +45,15 @@ public class RotationOnlyAutoAlignCommand extends CommandBase {
 
     @Override
     public void execute() {
-        hController.setPID(kPH, kIH, kDH);
         double currentHeading = follower.getHeading();
 
-
+        // Calculate heading error with proper angle wrapping
         double errorH = Math.atan2(
                 Math.sin(targetHeading - currentHeading),
                 Math.cos(targetHeading - currentHeading)
         );
 
-
+        // Calculate rotation power from PID
         double pH = hController.calculate(0, errorH);
 
         if (!Robot.isRedAlliance) {
@@ -65,7 +64,7 @@ public class RotationOnlyAutoAlignCommand extends CommandBase {
             lat = -Robot.DriverGamepad.gamepad.left_stick_x;
         }
 
-
+        // Pass through X/Y controls from left stick, override rotation with PID
 
         follower.setTeleOpDrive(fwd,lat,
                 pH,false);

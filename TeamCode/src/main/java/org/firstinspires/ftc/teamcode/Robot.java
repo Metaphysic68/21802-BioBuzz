@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.arcrobotics.ftclib.kotlin.extensions.gamepad.GamepadExExtKt.whenInactive;
 
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -84,9 +85,13 @@ public class Robot extends com.arcrobotics.ftclib.command.Robot {
                         // new SetStopperPosition(stopper, RobotConstants.Stopper.POSITION_CLOSED)
                 ));
 
+        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
-        new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER)
-                .whileHeld(new RotationOnlyAutoAlignCommand(isRedAlliance ? 0 : Math.PI, follower));
+        rightBumper.whileHeld(new ConditionalCommand(
+                new RotationOnlyAutoAlignCommand(Math.toRadians(37), follower),
+                new RotationOnlyAutoAlignCommand(Math.toRadians(-37), follower),
+                () -> isRedAlliance
+        ));
 
         new GamepadButton(DriverGamepad, GamepadKeys.Button.Y)
                 .whenActive(new SequentialCommandGroup(
