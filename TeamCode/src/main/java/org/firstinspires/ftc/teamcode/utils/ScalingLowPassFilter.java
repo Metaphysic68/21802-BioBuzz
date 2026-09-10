@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils;
 
-import com.pedropathing.math.MathFunctions;
+
+import com.seattlesolvers.solverslib.util.MathUtils;
 
 public class ScalingLowPassFilter extends Filter {
     public double coeff;
@@ -39,7 +40,7 @@ public class ScalingLowPassFilter extends Filter {
     }
 
     public void setCoefficient(double coeff) {
-        this.coeff = MathFunctions.clamp(coeff, 0, 1);
+        this.coeff = MathUtils.clamp(coeff, 0, 1);
     }
 
     public void setFactor(double factor) {

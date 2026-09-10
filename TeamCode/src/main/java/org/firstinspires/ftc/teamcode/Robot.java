@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.util.Timer;
+import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -44,7 +44,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        follower = Constants.createFollower(hMap);
+        follower = Constants.create(hMap);
         //elevator = new Elevator(hMap, telemetry);
         //intake = new Intake(hMap,telemetry);
         //trapdoor = new Trapdoor(hMap,telemetry);
@@ -103,16 +103,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             loops++;
 
             if (loops > 10) {
-                double now = loop.getElapsedTime();
+                double now = loop.milliseconds();
                 loopTime = (now - lastLoop) / loops;
                 lastLoop = now;
                 loops = 0;
             }
 
-            telemetry.addData("Chassis X", "%.4f", follower.getPose().getX());
-            telemetry.addData("Chassis Y", "%.4f", follower.getPose().getY());
-            telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
-            telemetry.addData("Chassis Heading", "%.6f", follower.getPose().getHeading());
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");

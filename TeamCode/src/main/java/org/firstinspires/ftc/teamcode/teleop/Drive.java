@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-import com.pedropathing.geometry.Pose;
+
+import com.pedropathing.drivetrain.DrivePowers;
+import com.pedropathing.follower.ManualDrive;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -31,17 +34,16 @@ public class Drive extends CommandOpMode {
         Robot.isRedAlliance = PoseStorage.isRedAlliance;
 
         if (PoseStorage.currentPose != null) {
-            bot.follower.setStartingPose(PoseStorage.currentPose);
+            bot.follower.setPose(new Pose(0,0));
             PoseStorage.currentPose = null;
         } else {
-            bot.follower.setStartingPose(Robot.isRedAlliance ? new Pose(0,0,0) : new Pose(0,0,Math.toRadians(180)));
+            bot.follower.setPose(Robot.isRedAlliance ? new Pose(0,0) : new Pose(0,0,Math.toRadians(180)));
         }
     }
 
     @Override
     public void run() {
         if (!hasStarted) {
-            bot.follower.startTeleopDrive(true);
             hasStarted = true;
         }
 
@@ -64,7 +66,13 @@ public class Drive extends CommandOpMode {
         }
 
         if (!Robot.isAutoAligned){
-            bot.follower.setTeleOpDrive(fwd, lat, rot, false);
+            DrivePowers powers = ManualDrive.fieldCentric(
+                    fwd,
+                    lat,
+                    rot,
+                    bot.follower.pose().heading()
+            );
+            bot.follower.manual(powers);
         }
 
 

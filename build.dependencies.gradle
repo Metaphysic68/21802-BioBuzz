@@ -20,7 +20,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:FtcCommon:11.2.1'
     implementation 'org.firstinspires.ftc:Vision:11.2.1'
     implementation 'com.acmerobotics.dashboard:dashboard:0.5.1'
-    implementation 'com.pedropathing:ftc:2.1.2'
+    implementation 'com.pedropathing:revhub:3.0.0'
+    implementation 'com.pedropathing:tuning:1.0.0'
     implementation "org.solverslib:core:0.3.5" // core
     implementation "org.solverslib:pedroPathing:0.3.5" // pedroPathing
     //implementation 'org.ftclib.ftclib:core:2.1.1' // core
