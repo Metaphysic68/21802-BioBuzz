@@ -6,7 +6,6 @@ import static com.pedropathing.api.Paths.*;
 
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.Path;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.commands.FollowPathCommand;

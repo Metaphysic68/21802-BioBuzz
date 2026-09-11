@@ -8,16 +8,10 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 public class FollowPathCommand extends CommandBase {
     private final Follower follower;
     private final Path path;
-    private boolean holdEnd = true;
 
     public FollowPathCommand(Follower follower, Path path ) {
         this.follower = follower;
         this.path = path;
-    }
-
-    public FollowPathCommand setHoldEnd(boolean holdEnd) {
-        this.holdEnd = holdEnd;
-        return this;
     }
 
     @Override
@@ -32,6 +26,6 @@ public class FollowPathCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return !follower.isBusy();
+        return follower.atParametricEnd();
     }
 }
