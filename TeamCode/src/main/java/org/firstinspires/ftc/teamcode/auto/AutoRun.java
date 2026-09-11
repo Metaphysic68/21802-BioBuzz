@@ -24,7 +24,7 @@ public class AutoRun extends LinearOpMode {
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
         bot.isRedAlliance = true;
 
-        bot.follower.setPose(new Pose(72,72,0));
+        bot.follower.setPose(new Pose(85.9929, 9.9183, 0));
 
         waitForStart();
 
