@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import static java.lang.Double.NaN;
 
 import com.pedropathing.algorithm.Foresight;
 import com.pedropathing.algorithm.ForesightConfig;
@@ -29,6 +28,7 @@ public class Constants {
         c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
         c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
         c.manualBrakeMode.set(true);
+
     });
 
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
@@ -65,6 +65,7 @@ public class Constants {
                 c.maxAchievableStrafeVelocity.set(78.34700963911331);
                 c.naturalForwardDeceleration.set(34.68568606893622);
                 c.naturalStrafeDeceleration.set(51.05800116807612);
+
             }
     );
 

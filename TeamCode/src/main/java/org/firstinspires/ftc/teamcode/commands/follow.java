@@ -5,11 +5,11 @@ import com.pedropathing.paths.Path;
 import com.seattlesolvers.solverslib.command.CommandBase;
 
 
-public class FollowPathCommand extends CommandBase {
+public class follow extends CommandBase {
     private final Follower follower;
     private final Path path;
 
-    public FollowPathCommand(Follower follower, Path path ) {
+    public follow(Follower follower, Path path ) {
         this.follower = follower;
         this.path = path;
     }
