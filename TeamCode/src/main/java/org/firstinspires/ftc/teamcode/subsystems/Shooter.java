@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.math.Pose;
+import com.pedropathing.math.Velocity;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,12 +9,14 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.utils.CachedMotor;
+import org.firstinspires.ftc.teamcode.utils.RobotConstants;
+import org.firstinspires.ftc.teamcode.utils.ShootingMath;
 
 
 public class Shooter extends SubsystemBase {
 
-    private final DcMotorEx motor1;
-    private DcMotorEx motor2;
+    private final CachedMotor motor1;
+    private final CachedMotor motor2;
     double currentDistance;
     public double targetVelocity;
     @Config
@@ -24,10 +27,6 @@ public class Shooter extends SubsystemBase {
         public static double   kf = 14.87;
     }
 
-
-
-    private final Pose RedScore = new Pose(57.32088681446908, 60.10618436406067);
-    private final Pose BlueScore = new Pose (141.5-57.32088681446908,141.5-60.10618436406067);
 
 
     public Shooter(HardwareMap hardwareMap) {
@@ -76,24 +75,11 @@ public class Shooter extends SubsystemBase {
     }
 
 
-    public double tarVelRED(double x, double y){
-        currentDistance = Math.hypot(RedScore.x() - x, RedScore.y() - y);
-
-        return targetVelocity = (0.0068 * Math.pow(currentDistance, 2)) + (5.2211 * currentDistance) + 1262.9;
-
-    }
     public double getPower(){
         return motor1.getPower();
     }
     public double getCurrentDistanceShooter(){
         return currentDistance;
-    }
-    public double tarVelBLUE(double x, double y){
-        currentDistance = Math.hypot(BlueScore.x() - x, BlueScore.y() - y);
-
-        return targetVelocity = (0.0068 * Math.pow(currentDistance, 2)) + (5.2211 * currentDistance) + 1262.9;
-
-
     }
     public void setTargetVelocity(double vel){
         motor1.setVelocity(vel);
@@ -101,23 +87,30 @@ public class Shooter extends SubsystemBase {
 
 
     }
+    public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
+        setVelocityForGoal(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
+        if (robotPose.y() > 72){
+            setVelocityForGoal(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
 
-    public void setVelocityRED(double x, double y){
-        currentDistance = Math.hypot(RedScore.x() - x, RedScore.y() - y);
-        targetVelocity = (0.0068 * Math.pow(currentDistance, 2)) + (5.2211 * currentDistance) + 1262.9;
-        motor1.setVelocity(targetVelocity);
-        motor2.setVelocity(targetVelocity);
-
+        }
     }
-    public void setVelocityBLUE(double x, double y){
-        currentDistance = Math.hypot(BlueScore.x() - x, BlueScore.y() - y);
+    public void setVelocityBLUE(Pose robotPose, Velocity robotVelocity){
+        setVelocityForGoal(RobotConstants.BLUE_GOAL_RIGHT, robotPose, robotVelocity);
+        if (robotPose.y() < 72){
+            setVelocityForGoal(RobotConstants.BLUE_GOAL_LEFT, robotPose, robotVelocity);
 
-        targetVelocity = (0.0068 * Math.pow(currentDistance, 2)) + (5.2211 * currentDistance) + 1262.9;
+        }
+    }
 
+    private void setVelocityForGoal(Pose goal, Pose robotPose, Velocity robotVelocity){
+        currentDistance = goal.distance(robotPose);
+
+        Pose virtualPose = ShootingMath.calculateVirtualRobot(robotPose, robotVelocity, goal);
+        double virtualDistance = goal.distance(virtualPose);
+
+        targetVelocity = (0.0068 * Math.pow(virtualDistance, 2)) + (5.2211 * virtualDistance) + 1262.9;
         motor1.setVelocity(targetVelocity);
         motor2.setVelocity(targetVelocity);
-
-
     }
     public double getCurrentVelocity(){
         return motor1.getVelocity();
