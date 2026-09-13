@@ -27,38 +27,38 @@ public class Turret extends SubsystemBase {
         turret = hardwareMap.get(Servo.class, "turret");
         turret.setDirection(Servo.Direction.FORWARD);
     }
+    public void setTargetAngleRED(double x, double y, double heading){
+        double fieldRadians = Math.atan2(RedScore.y() - y, RedScore.x()-x);
+        double angleDegrees = Math.toDegrees(fieldRadians - heading);
 
-    public double angleToRED(double x, double y, double heading){
-        double fieldAngle = Math.atan2(RedScore.y() - y, RedScore.x() - x);
-        return targetAngle = wrapAngle(fieldAngle - heading);
-    }
+        while (angleDegrees > 180) angleDegrees -= 360;
+        while (angleDegrees <= -180) angleDegrees += 360;
 
-    public double angleToBLUE(double x, double y, double heading){
-        double fieldAngle = Math.atan2(BlueScore.y() - y, BlueScore.x() - x);
-        return targetAngle = wrapAngle(fieldAngle - heading);
-    }
+        targetAngle = angleDegrees;
 
-    public void aimRED(double x, double y, double heading){
-        setTurretAngle(angleToRED(x, y, heading));
-    }
+        double pos = 0.5 + (angleDegrees+TurretConstants.centerOffsetDegrees) / TurretConstants.servoRange;
 
-    public void aimBLUE(double x, double y, double heading){
-        setTurretAngle(angleToBLUE(x, y, heading));
-    }
-
-
-    public void setTurretAngle(double angleRadians){
-        double angleDegrees = Math.toDegrees(angleRadians);
-        double position = 0.5 + (angleDegrees + TurretConstants.centerOffsetDegrees) / TurretConstants.servoRange;
-        targetPosition = clamp(position, 0.0, 1.0);
+        targetPosition = clamp(pos,0,1);
         turret.setPosition(targetPosition);
+
+    }
+    public void setTargetAngleBLUE(double x, double y, double heading){
+        double fieldRadians = Math.atan2(BlueScore.y() - y, BlueScore.x()-x);
+        double angleDegrees = Math.toDegrees(fieldRadians - heading);
+
+        while (angleDegrees > 180) angleDegrees -= 360;
+        while (angleDegrees <= -180) angleDegrees += 360;
+
+        targetAngle = angleDegrees;
+
+        double pos = 0.5 + (angleDegrees+TurretConstants.centerOffsetDegrees) / TurretConstants.servoRange;
+
+        targetPosition = clamp(pos,0,1);
+        turret.setPosition(targetPosition);
+
     }
 
-    private double wrapAngle(double angle){
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        while (angle < -Math.PI) angle += 2 * Math.PI;
-        return angle;
-    }
+
 
     public double getTargetAngle(){
         return targetAngle;
