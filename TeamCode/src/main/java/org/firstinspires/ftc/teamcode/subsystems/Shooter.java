@@ -119,7 +119,8 @@ public class Shooter extends SubsystemBase {
         double targetServoPos = (-3e-5 * Math.pow(virtualDistance, 2)) + (0.0123 * virtualDistance) - 0.4772;
         double safeHoodPos = Range.clip(targetServoPos, 0, 0.8);
 
-        hood.setPosition(safeHoodPos);    }
+        hood.setPosition(safeHoodPos);
+    }
     public double getCurrentVelocity(){
         return motor1.getVelocity();
     }
