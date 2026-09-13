@@ -100,6 +100,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public void run() {
         if (follower != null) {
 
+
             loops++;
 
             if (loops > 10) {
