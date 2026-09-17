@@ -67,6 +67,25 @@ public class Limelight {
         }
         return null;
     }
+    public static Double getDistanceToPollen(double pollenHeightM, double cameraHeightM, double cameraPitchDeg) {
+        Double tyDeg = getTy();
+        if (tyDeg == null) return null;
+        return getDistanceToPollen(tyDeg, pollenHeightM, cameraHeightM, cameraPitchDeg);
+    }
+
+
+    public static Double getDistanceToPollen(double tyDeg, double pollenHeightM, double cameraHeightM, double cameraPitchDeg) {
+        double angleBelowHorizonRad = Math.toRadians(cameraPitchDeg - tyDeg);
+        if (angleBelowHorizonRad <= 0) return null;
+
+        double distance = (cameraHeightM - pollenHeightM) / Math.tan(angleBelowHorizonRad);
+        return Double.isFinite(distance) ? distance : null;
+    }
+
+    public static LLResult getLatestResult() {
+        if (limelight == null) return null;
+        return limelight.getLatestResult();
+    }
 
     public static Double getTy() {
         if (limelight == null) return null;
