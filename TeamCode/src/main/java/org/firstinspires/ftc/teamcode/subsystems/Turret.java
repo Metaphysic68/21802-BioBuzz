@@ -61,8 +61,6 @@ public class Turret extends SubsystemBase {
 
     }
 
-
-
     public double getTargetAngle(){
         return targetAngle;
     }

@@ -64,7 +64,6 @@ public class AutoRunPath extends SequentialCommandGroup {
                 new follow(f,path6())
 
 
-
                 );
     }
 
