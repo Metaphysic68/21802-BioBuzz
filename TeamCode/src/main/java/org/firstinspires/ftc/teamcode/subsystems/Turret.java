@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.utils.ShootingMath;
 public class Turret extends SubsystemBase {
 
     private final Servo turret;
-    public double targetAngle;
+    public double targetAngle; //xd
     public double targetPosition;
 
     @Config
