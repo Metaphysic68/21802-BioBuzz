@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
-import org.firstinspires.ftc.teamcode.utils.ShootingMath;
+import org.firstinspires.ftc.teamcode.utils.SOTM;
 
 public class Turret extends SubsystemBase {
 
@@ -44,7 +44,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void setTargetAngleForGoal(Pose goal, Pose robotPose, Velocity robotVelocity){
-        Pose virtualPose = ShootingMath.calculateVirtualRobot(robotPose, robotVelocity, goal);
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
 
         double fieldRadians = Math.atan2(goal.y() - virtualPose.y(), goal.x() - virtualPose.x());
         double angleDegrees = Math.toDegrees(fieldRadians - robotPose.heading());

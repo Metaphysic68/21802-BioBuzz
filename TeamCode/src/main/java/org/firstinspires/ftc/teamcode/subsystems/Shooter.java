@@ -12,7 +12,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
-import org.firstinspires.ftc.teamcode.utils.ShootingMath;
+import org.firstinspires.ftc.teamcode.utils.SOTM;
 
 
 public class Shooter extends SubsystemBase {
@@ -109,7 +109,7 @@ public class Shooter extends SubsystemBase {
     private void setVelocityForGoal(Pose goal, Pose robotPose, Velocity robotVelocity){
         currentDistance = goal.distance(robotPose);
 
-        Pose virtualPose = ShootingMath.calculateVirtualRobot(robotPose, robotVelocity, goal);
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
         double virtualDistance = goal.distance(virtualPose);
 
         targetVelocity = (0.0068 * Math.pow(virtualDistance, 2)) + (5.2211 * virtualDistance) + 1262.9;
