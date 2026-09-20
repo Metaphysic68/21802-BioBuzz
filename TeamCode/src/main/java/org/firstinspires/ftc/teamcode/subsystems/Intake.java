@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.bylazar.lights.RGBIndicator;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 
 public class Intake extends SubsystemBase {
     private final CachedMotor intake;
-    //private final DcMotorEx intakeMotor2;
+    private final DcMotorEx intake2;
     private DigitalChannel laserInput;
     private final Timer timer;
     private final Servo light;
@@ -35,8 +34,8 @@ public class Intake extends SubsystemBase {
         light.setPosition(0.333);
 
 
-        //intakeMotor2 = hMap.get(DcMotorEx.class, "Intake2");
-        //intakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake2 = hMap.get(DcMotorEx.class, "intake2");
+        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -57,7 +56,7 @@ public class Intake extends SubsystemBase {
 
     public void setPower(double vel){
         intake.setPower(vel);
-        //intakeMotor2.setPower(vel);
+        intake2.setPower(vel);
     }
 
 
