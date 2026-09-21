@@ -22,7 +22,7 @@ public class Turret extends SubsystemBase {
         targetAngles = Math.toDegrees(targetRadians)- robotPose.heading();
         while (targetAngles > 180) targetAngles -= 360;
         while (targetAngles <= -180) targetAngles += 360;
-        double pos = (targetAngles+0.5)/360;
+        double pos = 0.5 + (targetAngles)/360;
         turret.setPosition(pos);
 
     }
