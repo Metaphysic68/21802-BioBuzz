@@ -24,19 +24,19 @@ public class AutoRun extends LinearOpMode {
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
         bot.isRedAlliance = true;
 
-        bot.follower.setPose(new Pose(85.9929, 9.9183, 0));
+       // bot.follower.setPose(new Pose(85.9929, 9.9183, 0));
 
         waitForStart();
 
         if (opModeIsActive()) {
-            CommandScheduler.getInstance().schedule(new AutoRunPath(bot.follower));
+           // CommandScheduler.getInstance().schedule(new AutoRunPath(bot.follower));
         }
 
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().run();
             bot.run();
 
-            PoseStorage.currentPose = bot.follower.pose();
+           // PoseStorage.currentPose = bot.follower.pose();
             telemetry.update();
         }
 

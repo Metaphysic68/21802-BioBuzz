@@ -29,21 +29,21 @@ public class Turret extends SubsystemBase {
         turret.setDirection(Servo.Direction.FORWARD);
     }
     public void setTargetAngleRED(Pose robotPose, Velocity robotVelocity){
-        setTargetAngleForGoal(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
+        setAngle(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() > 72){
-            setTargetAngleForGoal(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
+            setAngle(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
 
         }
     }
     public void setTargetAngleBLUE(Pose robotPose, Velocity robotVelocity){
-        setTargetAngleForGoal(RobotConstants.BLUE_GOAL_RIGHT, robotPose, robotVelocity);
+        setAngle(RobotConstants.BLUE_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() < 72){
-            setTargetAngleForGoal(RobotConstants.BLUE_GOAL_LEFT, robotPose, robotVelocity);
+            setAngle(RobotConstants.BLUE_GOAL_LEFT, robotPose, robotVelocity);
 
         }
     }
 
-    private void setTargetAngleForGoal(Pose goal, Pose robotPose, Velocity robotVelocity){
+    private void setAngle(Pose goal, Pose robotPose, Velocity robotVelocity){
         Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
 
         double fieldRadians = Math.atan2(goal.y() - virtualPose.y(), goal.x() - virtualPose.x());

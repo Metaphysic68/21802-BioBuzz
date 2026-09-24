@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
-    public Follower follower;
+    //public Follower follower;
     //public Elevator elevator;
     //public Intake intake;
     //public Trapdoor trapdoor;
+    public Shooter shooter;
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
@@ -44,7 +46,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        follower = Constants.create(hMap);
+        //follower = Constants.create(hMap);
+        shooter = new Shooter(hMap);
         //elevator = new Elevator(hMap, telemetry);
         //intake = new Intake(hMap,telemetry);
         //trapdoor = new Trapdoor(hMap,telemetry);
@@ -62,13 +65,13 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void configureButtons() {
-        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
+        /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whileHeld(new ConditionalCommand(
                 new RotationOnlyAutoAlignCommand(0, follower),
                 new RotationOnlyAutoAlignCommand(0, follower),
                 () -> isRedAlliance
-        ));
+        ));*/
         /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new ElevatorCommand(elevator, 1200))
                 .whenInactive(new ElevatorCommand(elevator, 0));ol*/
@@ -98,7 +101,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     @Override
     public void run() {
-        if (follower != null) {
+        //if (follower != null) {
 
 
             loops++;
@@ -109,6 +112,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
+            shooter.setTargetVelocity(1000);
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
@@ -117,8 +121,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             //telemetry.addData("Elevator Position", elevator.getPos());
             //telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
-            follower.update();
-        }
+            //follower.update();
+        //}
         super.run();
     }
 }

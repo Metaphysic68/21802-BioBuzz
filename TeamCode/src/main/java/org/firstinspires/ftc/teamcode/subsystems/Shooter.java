@@ -10,15 +10,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
 
 public class Shooter extends SubsystemBase {
 
-    private final CachedMotor motor1;
-    private final CachedMotor motor2;
+    private final DcMotorEx motor1;
+    private final DcMotorEx motor2;
     private final Servo hood;
     double currentDistance;
     public double targetVelocity;
@@ -34,11 +33,11 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(HardwareMap hardwareMap) {
 
-        motor1 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
-        motor2 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
+        motor1 = hardwareMap.get(DcMotorEx.class, "shooter");
+        motor2 = hardwareMap.get(DcMotorEx.class, "shooter2");
 
-        motor1.setDirection(DcMotorSimple.Direction.FORWARD);
-        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motor1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -92,21 +91,21 @@ public class Shooter extends SubsystemBase {
 
     }
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
-        setVelocityForGoal(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
+        setVelocityForHive(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() > 72){
-            setVelocityForGoal(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
+            setVelocityForHive(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
 
         }
     }
     public void setVelocityBLUE(Pose robotPose, Velocity robotVelocity){
-        setVelocityForGoal(RobotConstants.BLUE_GOAL_RIGHT, robotPose, robotVelocity);
+        setVelocityForHive(RobotConstants.BLUE_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() < 72){
-            setVelocityForGoal(RobotConstants.BLUE_GOAL_LEFT, robotPose, robotVelocity);
+            setVelocityForHive(RobotConstants.BLUE_GOAL_LEFT, robotPose, robotVelocity);
 
         }
     }
 
-    private void setVelocityForGoal(Pose goal, Pose robotPose, Velocity robotVelocity){
+    private void setVelocityForHive(Pose goal, Pose robotPose, Velocity robotVelocity){
         currentDistance = goal.distance(robotPose);
 
         Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
