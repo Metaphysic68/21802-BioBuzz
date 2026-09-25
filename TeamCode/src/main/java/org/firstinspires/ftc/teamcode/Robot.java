@@ -125,14 +125,13 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            shooter.setTargetVelocity(1400);
-
+            shooter.setRegressionVelocityandPos();
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
-            telemetry.addData("Target Velocity - Shooter","%.2f",shooter.targetVelocity);
-            telemetry.addData("Off Velocity", "%.2f", Math.abs(shooter.targetVelocity-shooter.getCurrentVelocity()));
+            telemetry.addData("Target Velocity - Shooter","%.2f", Shooter.targetVelocity);
+            telemetry.addData("Off Velocity", "%.2f", Math.abs(Shooter.targetVelocity -shooter.getCurrentVelocity()));
 
             telemetry.update();
             //follower.update();

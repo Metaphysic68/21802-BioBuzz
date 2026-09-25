@@ -14,14 +14,15 @@ import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
-
+@Config
 public class Shooter extends SubsystemBase {
 
     private final CachedMotor motor1;
     private final CachedMotor motor2;
     private final Servo hood;
     double currentDistance;
-    public double targetVelocity;
+    public static double targetVelocity;
+
     @Config
     public static class ShooterPIDF{
         public static double kp = 0;
@@ -36,7 +37,7 @@ public class Shooter extends SubsystemBase {
 
 
     }
-
+    private PIDFCoefficients currentPIDF;
 
 
     public Shooter(HardwareMap hardwareMap) {
@@ -54,36 +55,25 @@ public class Shooter extends SubsystemBase {
         hood.setDirection(Servo.Direction.FORWARD);
         hood.setPosition(0);
 
-        PIDFCoefficients pid = new PIDFCoefficients(
-                ShooterPIDF.kp,ShooterPIDF.ki,ShooterPIDF.kd,ShooterPIDF.kf);
+        currentPIDF = new PIDFCoefficients(ShooterPIDF.kp, ShooterPIDF.ki, ShooterPIDF.kd, ShooterPIDF.kf);
+        motor1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
+        motor2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
 
-
-        motor1.setPIDFCoefficients(
-                DcMotorEx.RunMode.RUN_USING_ENCODER,
-                pid
-        );
-
-        motor2.setPIDFCoefficients(
-                DcMotorEx.RunMode.RUN_USING_ENCODER,
-                pid
-        );
     }
 
     @Override
     public void periodic(){
-        PIDFCoefficients pid = new PIDFCoefficients(
-                ShooterPIDF.kp,ShooterPIDF.ki,ShooterPIDF.kd,ShooterPIDF.kf);
+        if (ShooterPIDF.kp != currentPIDF.p || ShooterPIDF.ki != currentPIDF.i ||
+                ShooterPIDF.kd != currentPIDF.d || ShooterPIDF.kf != currentPIDF.f) {
 
+            currentPIDF = new PIDFCoefficients(ShooterPIDF.kp, ShooterPIDF.ki, ShooterPIDF.kd, ShooterPIDF.kf);
+            motor1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
+            motor2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
+        }
 
-        motor1.setPIDFCoefficients(
-                DcMotorEx.RunMode.RUN_USING_ENCODER,
-                pid
-        );
-        motor2.setPIDFCoefficients(
-                DcMotorEx.RunMode.RUN_USING_ENCODER,
-                pid
-        );
     }
+
+
 
 
     public double getPower(){
@@ -98,6 +88,7 @@ public class Shooter extends SubsystemBase {
         motor2.setVelocity(vel);
     }
     public void setRegressionVelocityandPos(){
+        targetVelocity = ShooterConstants.regressionVelocity;
         motor1.setVelocity(ShooterConstants.regressionVelocity);
         motor2.setVelocity(ShooterConstants.regressionVelocity);
         hood.setPosition(ShooterConstants.regressionHoodPos);
