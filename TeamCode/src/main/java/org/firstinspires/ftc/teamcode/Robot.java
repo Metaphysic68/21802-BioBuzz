@@ -55,6 +55,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
+        register(shooter);
         //register(stopper);
         //register(intake);
 
