@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.ConditionalCommand;
-import com.seattlesolvers.solverslib.command.button.GamepadButton;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.Stopper;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -24,10 +23,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     //public Follower follower;
-    //public Elevator elevator;
     //public Intake intake;
-    //public Trapdoor trapdoor;
     public Shooter shooter;
+    //public Stopper stopper;
+
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
@@ -48,23 +47,36 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     private void initSubsystems() {
         //follower = Constants.create(hMap);
         shooter = new Shooter(hMap);
-        //elevator = new Elevator(hMap, telemetry);
-        //intake = new Intake(hMap,telemetry);
-        //trapdoor = new Trapdoor(hMap,telemetry);
+        //stopper = new Stopper(hMap);
+        //intake = new Intake(hMap);
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-
-        //register(elevator);
+        //register(stopper);
         //register(intake);
-        //register(trapdoor);
 
     }
 
     private void configureButtons() {
+        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+                .whenActive(new InstantCommand(() -> {
+                    stopper.setPos(1);
+                    intake.setPower(1);
+                }))
+                .whenInactive(new InstantCommand(() -> {
+                    intake.setPower(0);
+                    stopper.setPos(0);
+                }));
+
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
+                .whenActive(new InstantCommand(() -> {
+                    intake.setPower(1);
+                    stopper.setPos(0);
+                }))
+                .whenInactive(new InstantCommand(() -> intake.setPower(0)));*/
         /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whileHeld(new ConditionalCommand(
@@ -112,14 +124,15 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            shooter.setTargetVelocity(1000);
+            shooter.setTargetVelocity(1400);
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
-            //telemetry.addData("Elevator Target", elevator.getTargetPosition());
-            //telemetry.addData("Elevator Position", elevator.getPos());
-            //telemetry.addData("Elevator At Target", elevator.isAtTarget());
+            telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
+            telemetry.addData("Target Velocity - Shooter","%.2f",shooter.targetVelocity);
+            telemetry.addData("Off Velocity", "%.2f", Math.abs(shooter.targetVelocity-shooter.getCurrentVelocity()));
+
             telemetry.update();
             //follower.update();
         //}

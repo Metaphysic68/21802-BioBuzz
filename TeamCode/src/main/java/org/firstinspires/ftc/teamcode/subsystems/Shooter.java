@@ -23,10 +23,10 @@ public class Shooter extends SubsystemBase {
     public double targetVelocity;
     @Config
     public static class ShooterPIDF{
-        public static double kp = 520;
-        public static double ki = 0.00;
+        public static double kp = 0;
+        public static double ki = 0;
         public static double kd = 0.00;
-        public static double   kf = 14.87;
+        public static double   kf = 12.3;
     }
 
 
@@ -36,8 +36,8 @@ public class Shooter extends SubsystemBase {
         motor1 = hardwareMap.get(DcMotorEx.class, "shooter");
         motor2 = hardwareMap.get(DcMotorEx.class, "shooter2");
 
-        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
-        motor2.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -85,6 +85,7 @@ public class Shooter extends SubsystemBase {
         return currentDistance;
     }
     public void setTargetVelocity(double vel){
+        targetVelocity = vel;
         motor1.setVelocity(vel);
         motor2.setVelocity(vel);
 
@@ -121,7 +122,7 @@ public class Shooter extends SubsystemBase {
         hood.setPosition(safeHoodPos);
     }
     public double getCurrentVelocity(){
-        return motor1.getVelocity();
+        return -motor1.getVelocity();
     }
 
 }
