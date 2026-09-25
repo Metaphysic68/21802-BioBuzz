@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Velocity;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,27 +10,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
-import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
-@Config
+@Configurable
 public class Shooter extends SubsystemBase {
 
-    private final CachedMotor motor1;
-    private final CachedMotor motor2;
+    private final DcMotorEx motor1;
+    private final DcMotorEx motor2;
     private final Servo hood;
     double currentDistance;
     public static double targetVelocity;
 
-    @Config
+    @Configurable
     public static class ShooterPIDF{
         public static double kp = 0;
         public static double ki = 0;
         public static double kd = 0.00;
-        public static double   kf = 12.3;
+        public static double   kf = 13.12;
     }
-    @Config
+    @Configurable
     public static class ShooterConstants{
         public static double regressionVelocity = 0;
         public static double regressionHoodPos = 0;
@@ -42,8 +41,8 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(HardwareMap hardwareMap) {
 
-        motor1 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
-        motor2 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
+        motor1 = hardwareMap.get(DcMotorEx.class, "shooter");
+        motor2 = hardwareMap.get(DcMotorEx.class, "shooter2");
 
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -87,12 +86,7 @@ public class Shooter extends SubsystemBase {
         motor1.setVelocity(vel);
         motor2.setVelocity(vel);
     }
-    public void setRegressionVelocityandPos(){
-        targetVelocity = ShooterConstants.regressionVelocity;
-        motor1.setVelocity(ShooterConstants.regressionVelocity);
-        motor2.setVelocity(ShooterConstants.regressionVelocity);
-        hood.setPosition(ShooterConstants.regressionHoodPos);
-    }
+
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
         setVelocityForHive(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() > 72){

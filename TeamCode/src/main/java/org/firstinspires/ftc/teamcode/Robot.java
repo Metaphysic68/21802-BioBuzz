@@ -125,7 +125,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            shooter.setRegressionVelocityandPos();
+            shooter.setTargetVelocity(Shooter.targetVelocity);
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
