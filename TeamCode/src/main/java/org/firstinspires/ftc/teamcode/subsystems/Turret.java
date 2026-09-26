@@ -15,18 +15,28 @@ import org.firstinspires.ftc.teamcode.utils.SOTM;
 public class Turret extends SubsystemBase {
 
     private final Servo turret;
+    private final Servo turret2;
+
     public double targetAngle;
     public double targetPosition;
 
     @Config
     public static class TurretConstants {
-        public static double servoRange = 350;
+        public static double servoRange = 270;
         public static double centerOffsetDegrees = 0;
     }
 
     public Turret(HardwareMap hardwareMap) {
         turret = hardwareMap.get(Servo.class, "turret");
         turret.setDirection(Servo.Direction.FORWARD);
+        turret2 = hardwareMap.get(Servo.class, "turret2");
+        turret.setDirection(Servo.Direction.REVERSE);
+
+
+        turret.setPosition(0);
+        turret2.setPosition(0);
+
+
     }
     public void setTargetAngleRED(Pose robotPose, Velocity robotVelocity){
         setAngle(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
@@ -58,6 +68,7 @@ public class Turret extends SubsystemBase {
 
         targetPosition = clamp(pos,0,1);
         turret.setPosition(targetPosition);
+        turret2.setPosition(targetPosition);
 
     }
 
@@ -67,5 +78,11 @@ public class Turret extends SubsystemBase {
 
     public double getPosition(){
         return turret.getPosition();
+    }
+
+    public void setTargetPosition(double targetPosition) {
+        turret.setPosition(targetPosition);
+        turret2.setPosition(targetPosition);
+
     }
 }

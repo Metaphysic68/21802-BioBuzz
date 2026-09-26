@@ -13,21 +13,21 @@ import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 
 public class Intake extends SubsystemBase {
     private final CachedMotor intake;
-    private final DcMotorEx intake2;
+    /*private final CachedMotor intake2;
     private DigitalChannel laserInput;
     private final Timer timer;
-    private final Servo light;
+    private final Servo light;*/
 
 
 
 
     public Intake(HardwareMap hMap) {
-        timer = new Timer();
+        //timer = new Timer();
 
         intake = new CachedMotor(hMap.get(DcMotorEx.class, "intake"));
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        laserInput = hMap.get(DigitalChannel.class, "laserDigitalInput");
+        /*laserInput = hMap.get(DigitalChannel.class, "laserDigitalInput");
         laserInput.setMode(DigitalChannel.Mode.INPUT);
 
         light = hMap.get(Servo.class,"light");
@@ -35,28 +35,28 @@ public class Intake extends SubsystemBase {
 
 
         intake2 = hMap.get(DcMotorEx.class, "intake2");
-        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake2.setDirection(DcMotorSimple.Direction.REVERSE);*/
 
 
 
     }
     @Override
     public void periodic(){
-        boolean detected = laserInput.getState();
+        /*boolean detected = laserInput.getState();
 
         if (detected){
             timer.reset();
             light.setPosition(0.333);
         } if (detected && timer.milliseconds() > 50){
             light.setPosition(0.5);
-        }
+        }*/
 
     }
 
 
     public void setPower(double vel){
         intake.setPower(vel);
-        intake2.setPower(vel);
+        //intake2.setPower(vel);
     }
 
 

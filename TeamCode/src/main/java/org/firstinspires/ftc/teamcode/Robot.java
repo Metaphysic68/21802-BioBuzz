@@ -3,15 +3,19 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Stopper;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -23,9 +27,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     //public Follower follower;
-    //public Intake intake;
+    public Intake intake;
     public Shooter shooter;
-    //public Stopper stopper;
+    public Stopper stopper;
+    public Turret turret;
 
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
@@ -47,8 +52,9 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     private void initSubsystems() {
         //follower = Constants.create(hMap);
         shooter = new Shooter(hMap);
-        //stopper = new Stopper(hMap);
-        //intake = new Intake(hMap);
+        turret = new Turret(hMap);
+        stopper = new Stopper(hMap);
+        intake = new Intake(hMap);
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
@@ -56,15 +62,16 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         }
 
         register(shooter);
-        //register(stopper);
-        //register(intake);
+        register(turret);
+        register(stopper);
+        register(intake);
 
     }
 
     private void configureButtons() {
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    stopper.setPos(1);
+                    stopper.setPos(0.2);
                     intake.setPower(1);
                 }))
                 .whenInactive(new InstantCommand(() -> {
@@ -77,7 +84,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     intake.setPower(1);
                     stopper.setPos(0);
                 }))
-                .whenInactive(new InstantCommand(() -> intake.setPower(0)));*/
+                .whenInactive(new InstantCommand(() -> intake.setPower(0)));
+
+
+
+
+
         /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whileHeld(new ConditionalCommand(
