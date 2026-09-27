@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
-import com.bylazar.configurables.annotations.Configurable;
+import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Velocity;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,7 +13,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
-@Configurable
+@Config
 public class Shooter extends SubsystemBase {
 
     private final DcMotorEx motor1;
@@ -22,14 +22,14 @@ public class Shooter extends SubsystemBase {
     double currentDistance;
     public static double targetVelocity;
 
-    @Configurable
+    @Config
     public static class ShooterPIDF{
         public static double kp = 0;
         public static double ki = 0;
         public static double kd = 0.00;
         public static double   kf = 13.12;
     }
-    @Configurable
+    @Config
     public static class ShooterConstants{
         public static double regressionVelocity = 0;
         public static double regressionHoodPos = 0;

@@ -21,14 +21,17 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:12.0.0'
     implementation 'androidx.annotation:annotation:1.11.0'
 
-    implementation 'com.acmerobotics.dashboard:dashboard:0.5.1'
-    implementation 'com.bylazar:fullpanels:1.0.12'
+    implementation("dev.frozenmilk.sinister:Sloth:0.3.2")
+    implementation("com.acmerobotics.slothboard:dashboard:0.3.2+0.6.0")
+
+    //implementation 'com.acmerobotics.dashboard:dashboard:0.5.1'
+    //implementation 'com.bylazar:fullpanels:1.0.12'
 
     implementation 'com.pedropathing:revhub:3.0.1'
     // tuning pulls Sloth in transitively; Sloth's loader fails on SDK 12.0
-    implementation('com.pedropathing:tuning:1.0.1') {
+    implementation('com.pedropathing:tuning:1.0.1') /*{
         exclude group: 'dev.frozenmilk.sinister', module: 'Sloth'
-    }
+    }*/
 
     implementation "org.solverslib:core:0.3.5" // core
     implementation "org.solverslib:pedroPathing:0.3.5" // pedroPathing

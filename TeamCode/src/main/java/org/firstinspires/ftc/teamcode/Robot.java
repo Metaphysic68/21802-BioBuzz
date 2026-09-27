@@ -84,14 +84,18 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     intake.setPower(1);
                     stopper.setPos(0);
                 }))
-                .whenInactive(new InstantCommand(() -> intake.setPower(0)));
+                .whenInactive(new InstantCommand(() ->
+                        intake.setPower(0)
+                ));
 
         GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whenActive(new InstantCommand(() -> {
                     turret.setTargetPosition(1);
                 }))
-                .whenInactive(new InstantCommand(() -> turret.setTargetPosition(0)));
+                .whenInactive(new InstantCommand(() ->
+                       turret.setTargetPosition(0)
+                ));
 
 
 
