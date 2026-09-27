@@ -33,8 +33,8 @@ public class Turret extends SubsystemBase {
         turret.setDirection(Servo.Direction.REVERSE);
 
 
-        turret.setPosition(0);
-        turret2.setPosition(0);
+        turret.setPosition(0.5);
+        turret2.setPosition(0.5);
 
 
     }
