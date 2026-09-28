@@ -14,36 +14,32 @@ import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
-@Config
+
 public class Shooter extends SubsystemBase {
 
-    private final CachedMotor motor1;
-    private final CachedMotor motor2;
+    private final DcMotorEx motor1;
+    private final DcMotorEx motor2;
     private final Servo hood;
     double currentDistance;
     public static double targetVelocity;
+    public static double targetPos;
 
     @Config
     public static class ShooterPIDF{
         public static double kp = 0;
         public static double ki = 0;
         public static double kd = 0.00;
-        public static double   kf = 13.12;
+        public static double   kf = 12.3;
     }
-    @Config
-    public static class ShooterConstants{
-        public static double regressionVelocity = 0;
-        public static double regressionHoodPos = 0;
 
 
-    }
-    private PIDFCoefficients currentPIDF;
 
 
     public Shooter(HardwareMap hardwareMap) {
 
-        motor1 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
-        motor2 = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
+        motor1 = hardwareMap.get(DcMotorEx.class, "shooter");
+        motor2 = hardwareMap.get(DcMotorEx.class, "shooter2");
+
 
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -55,25 +51,36 @@ public class Shooter extends SubsystemBase {
         hood.setDirection(Servo.Direction.FORWARD);
         hood.setPosition(0);
 
-        currentPIDF = new PIDFCoefficients(ShooterPIDF.kp, ShooterPIDF.ki, ShooterPIDF.kd, ShooterPIDF.kf);
-        motor1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
-        motor2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
+        PIDFCoefficients pid = new PIDFCoefficients(
+                ShooterPIDF.kp,ShooterPIDF.ki,ShooterPIDF.kd,ShooterPIDF.kf);
 
+
+        motor1.setPIDFCoefficients(
+                DcMotorEx.RunMode.RUN_USING_ENCODER,
+                pid
+        );
+
+        motor2.setPIDFCoefficients(
+                DcMotorEx.RunMode.RUN_USING_ENCODER,
+                pid
+        );
     }
 
     @Override
     public void periodic(){
-        if (ShooterPIDF.kp != currentPIDF.p || ShooterPIDF.ki != currentPIDF.i ||
-                ShooterPIDF.kd != currentPIDF.d || ShooterPIDF.kf != currentPIDF.f) {
+        PIDFCoefficients pid = new PIDFCoefficients(
+                ShooterPIDF.kp,ShooterPIDF.ki,ShooterPIDF.kd,ShooterPIDF.kf);
 
-            currentPIDF = new PIDFCoefficients(ShooterPIDF.kp, ShooterPIDF.ki, ShooterPIDF.kd, ShooterPIDF.kf);
-            motor1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
-            motor2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, currentPIDF);
-        }
 
+        motor1.setPIDFCoefficients(
+                DcMotorEx.RunMode.RUN_USING_ENCODER,
+                pid
+        );
+        motor2.setPIDFCoefficients(
+                DcMotorEx.RunMode.RUN_USING_ENCODER,
+                pid
+        );
     }
-
-
 
 
     public double getPower(){
@@ -86,6 +93,10 @@ public class Shooter extends SubsystemBase {
         targetVelocity = vel;
         motor1.setVelocity(vel);
         motor2.setVelocity(vel);
+    }
+    public void setPos(double pos){
+        targetVelocity = pos;
+        hood.setPosition(pos);
     }
 
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
@@ -114,12 +125,22 @@ public class Shooter extends SubsystemBase {
         motor2.setVelocity(targetVelocity);
 
         double targetServoPos = (-3e-5 * Math.pow(virtualDistance, 2)) + (0.0123 * virtualDistance) - 0.4772;
+        targetPos = targetServoPos;
         double safeHoodPos = Range.clip(targetServoPos, 0, 0.8);
 
         hood.setPosition(safeHoodPos);
     }
     public double getCurrentVelocity(){
         return -motor1.getVelocity();
+    }
+    public double getTargetVelocity(){
+        return targetVelocity;
+    }
+    public double getTargetPos(){
+        return targetPos;
+    }
+    public double getHoodPos(){
+        return hood.getPosition();
     }
 
 }

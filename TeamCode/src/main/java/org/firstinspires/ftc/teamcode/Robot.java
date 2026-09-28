@@ -90,11 +90,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
-        rightBumper.whenActive(new InstantCommand(() -> {
-                    turret.setTargetPosition(1);
-                }))
-                .whenInactive(new InstantCommand(() ->
-                       turret.setTargetPosition(0)
+        rightBumper.whenActive(new InstantCommand(() -> turret.setTargetPosition(1)))
+                .whenInactive(new InstantCommand(() -> turret.setTargetPosition(0)
                 ));
 
 
@@ -149,12 +146,18 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 loops = 0;
             }
             shooter.setTargetVelocity(Shooter.targetVelocity);
+
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
-            telemetry.addData("Target Velocity - Shooter","%.2f", Shooter.targetVelocity);
-            telemetry.addData("Off Velocity", "%.2f", Math.abs(Shooter.targetVelocity -shooter.getCurrentVelocity()));
+            telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
+            telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
+
+            telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
+            telemetry.addData("Target Pos - Hood", "%.2f",shooter.getHoodPos());
+
 
             telemetry.update();
             //follower.update();

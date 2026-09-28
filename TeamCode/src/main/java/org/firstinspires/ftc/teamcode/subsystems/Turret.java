@@ -30,7 +30,7 @@ public class Turret extends SubsystemBase {
         turret = hardwareMap.get(Servo.class, "turret");
         turret.setDirection(Servo.Direction.FORWARD);
         turret2 = hardwareMap.get(Servo.class, "turret2");
-        turret.setDirection(Servo.Direction.REVERSE);
+        turret2.setDirection(Servo.Direction.REVERSE);
 
 
         turret.setPosition(0.5);
@@ -62,9 +62,15 @@ public class Turret extends SubsystemBase {
         while (angleDegrees > 180) angleDegrees -= 360;
         while (angleDegrees <= -180) angleDegrees += 360;
 
-        targetAngle = angleDegrees;
+        double TURRET_MIN_ANGLE_DEGREES = -135.0;
+        // Can turn 135 deg right
+        double TURRET_MAX_ANGLE_DEGREES = 135.0;
+        double MaxAngleDegrees = Math.max(TURRET_MIN_ANGLE_DEGREES,
+                Math.min(TURRET_MAX_ANGLE_DEGREES, angleDegrees));
 
-        double pos = 0.5 + (angleDegrees+TurretConstants.centerOffsetDegrees) / TurretConstants.servoRange;
+        targetAngle = MaxAngleDegrees;
+
+        double pos = 0.5 + (MaxAngleDegrees+TurretConstants.centerOffsetDegrees) / TurretConstants.servoRange;
 
         targetPosition = clamp(pos,0,1);
         turret.setPosition(targetPosition);
