@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +13,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Stopper;
@@ -26,7 +28,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
-    //public Follower follower;
+    public Follower follower;
     public Intake intake;
     public Shooter shooter;
     public Stopper stopper;
@@ -50,7 +52,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        //follower = Constants.create(hMap);
+        follower = Constants.create(hMap);
         shooter = new Shooter(hMap);
         turret = new Turret(hMap);
         stopper = new Stopper(hMap);
@@ -156,11 +158,11 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
 
             telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
-            telemetry.addData("Target Pos - Hood", "%.2f",shooter.getHoodPos());
+            telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
 
             telemetry.update();
-            //follower.update();
+            follower.update();
         //}
         super.run();
     }
