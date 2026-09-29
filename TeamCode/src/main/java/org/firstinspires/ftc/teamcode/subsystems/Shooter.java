@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
@@ -24,6 +26,10 @@ public class Shooter extends SubsystemBase {
     public static double targetPos;
     public static double kS = 0.07, kV = 0.000346, kP = 0.01, useRaw = 60;
 
+    private final VoltageSensor battery;
+    private final ElapsedTime voltageTimer = new ElapsedTime();
+    private double filteredVoltage = 12.0;
+    public static double nominalVolts = 12.0;
 
 
     public Shooter(HardwareMap hardwareMap) {
@@ -41,17 +47,28 @@ public class Shooter extends SubsystemBase {
         hood.setDirection(Servo.Direction.FORWARD);
         hood.setPosition(0);
 
-
+        battery = hardwareMap.voltageSensor.iterator().next();
     }
 
     @Override
     public void periodic(){
 
+        if (voltageTimer.milliseconds() > 250) {
+            voltageTimer.reset();
+            double v = battery.getVoltage();
+            if (v > 6) {
+                filteredVoltage += 0.3 * (v - filteredVoltage);
+            }
+        }
+
+
+
         if (Math.abs(getTargetVelocity() - getCurrentVelocity()) > useRaw) {
             setPower(Math.signum(getTargetVelocity() - getCurrentVelocity()));
         }
         else{
-            setPower(Math.max(0, (kV * getTargetVelocity()) + (kP * (getTargetVelocity() - getCurrentVelocity()) + kS)));
+            double feedForwardCompensated = (kS * getTargetVelocity() + kS) * (nominalVolts/filteredVoltage);
+            setPower(Math.max(0, feedForwardCompensated + (kP * (getTargetVelocity() - getCurrentVelocity()))));
         }
     }
 
