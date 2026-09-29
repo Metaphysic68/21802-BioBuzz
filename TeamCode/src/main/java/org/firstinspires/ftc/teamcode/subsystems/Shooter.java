@@ -25,7 +25,6 @@ public class Shooter extends SubsystemBase {
     public static double targetVelocity;
     public static double targetPos;
     public static double kS = 0.07, kV = 0.000346, kP = 0.01, useRaw = 60;
-
     private final VoltageSensor battery;
     private final ElapsedTime voltageTimer = new ElapsedTime();
     private double filteredVoltage = 12.0;
@@ -61,13 +60,11 @@ public class Shooter extends SubsystemBase {
             }
         }
 
-
-
         if (Math.abs(getTargetVelocity() - getCurrentVelocity()) > useRaw) {
             setPower(Math.signum(getTargetVelocity() - getCurrentVelocity()));
         }
         else{
-            double feedForwardCompensated = (kS * getTargetVelocity() + kS) * (nominalVolts/filteredVoltage);
+            double feedForwardCompensated = (kV * getTargetVelocity() + kS) * (nominalVolts/filteredVoltage);
             setPower(Math.max(0, feedForwardCompensated + (kP * (getTargetVelocity() - getCurrentVelocity()))));
         }
     }
