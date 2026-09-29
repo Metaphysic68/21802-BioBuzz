@@ -26,8 +26,6 @@ public class Shooter extends SubsystemBase {
 
 
 
-
-
     public Shooter(HardwareMap hardwareMap) {
 
         top = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
