@@ -6,7 +6,7 @@ public class RobotConstants {
 
     public static final double FIELD_SIZE = 141.5;
 
-    public static final Pose RED_GOAL_RIGHT = new Pose(57.32088681446908, 60.10618436406067);
+    public static final Pose RED_GOAL_RIGHT = new Pose(58, 58);
     public static final Pose RED_GOAL_LEFT = new Pose(RED_GOAL_RIGHT.x(), FIELD_SIZE-RED_GOAL_RIGHT.y());
     public static final Pose BLUE_GOAL_RIGHT = new Pose(FIELD_SIZE - RED_GOAL_RIGHT.x(), FIELD_SIZE - RED_GOAL_RIGHT.y());
     public static final Pose BLUE_GOAL_LEFT = new Pose(FIELD_SIZE - RED_GOAL_RIGHT.x(), RED_GOAL_RIGHT.y());

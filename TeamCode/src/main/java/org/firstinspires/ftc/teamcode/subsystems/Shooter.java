@@ -24,7 +24,7 @@ public class Shooter extends SubsystemBase {
     double currentDistance;
     public static double targetVelocity;
     public static double targetPos;
-    public static double kS = 0.07, kV = 0.000346, kP = 0.01, useRaw = 60;
+    public static double kS = 0.11, kV = 0.00032, kP = 0.0004, useRaw = 60;
     private final VoltageSensor battery;
     private final ElapsedTime voltageTimer = new ElapsedTime();
     private double filteredVoltage = 12.0;

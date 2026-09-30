@@ -56,7 +56,7 @@ public class Turret extends SubsystemBase {
     private void setAngle(Pose goal, Pose robotPose, Velocity robotVelocity){
         Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
 
-        double fieldRadians = Math.atan2(goal.y() - virtualPose.y(), goal.x() - virtualPose.x());
+        double fieldRadians = Math.atan2(goal.y() - robotPose.y(), goal.x() - robotPose.x());
         double angleDegrees = Math.toDegrees(fieldRadians - robotPose.heading());
 
         while (angleDegrees > 180) angleDegrees -= 360;

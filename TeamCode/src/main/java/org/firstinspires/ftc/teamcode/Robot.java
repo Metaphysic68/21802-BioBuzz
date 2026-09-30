@@ -90,13 +90,11 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                         intake.setPower(0)
                 ));
 
-        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
+        /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whenActive(new InstantCommand(() -> turret.setTargetPosition(1)))
                 .whenInactive(new InstantCommand(() -> turret.setTargetPosition(0)
-                ));
-
-
+                ));*/
 
 
 
@@ -136,7 +134,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     @Override
     public void run() {
-        //if (follower != null) {
+        if (follower != null) {
 
 
             loops++;
@@ -148,6 +146,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 loops = 0;
             }
             shooter.setTargetVelocity(Shooter.targetVelocity);
+            turret.setTargetAngleRED(follower.pose(),follower.velocity());
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
@@ -160,10 +159,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
             telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
+            telemetry.addData("Pose", follower.pose());
+            telemetry.addData("Turret Degrees", turret.getTargetAngle());
 
             telemetry.update();
             follower.update();
-        //}
+        }
         super.run();
     }
 }
