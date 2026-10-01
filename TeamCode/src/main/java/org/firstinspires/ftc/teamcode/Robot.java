@@ -90,6 +90,14 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                         intake.setPower(0)
                 ));
 
+        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.DPAD_DOWN);
+
+            rightBumper.whenActive(new InstantCommand(() -> {
+                    intake.setPower(-1);
+                    stopper.setPos(0);
+                }))
+                .whenInactive(new InstantCommand(() -> intake.setPower(0)));
+
         /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
 
         rightBumper.whenActive(new InstantCommand(() -> turret.setTargetPosition(1)))
@@ -161,6 +169,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
             telemetry.addData("Pose", follower.pose());
             telemetry.addData("Turret Degrees", turret.getTargetAngle());
+
 
             telemetry.update();
             follower.update();
