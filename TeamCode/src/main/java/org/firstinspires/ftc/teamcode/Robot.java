@@ -27,10 +27,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     public Follower follower;
-    public Intake intake;
-    public Shooter shooter;
-    public Stopper stopper;
-    public Turret turret;
+    //public Intake intake;
+    //public Shooter shooter;
+    //public Stopper stopper;
+    //public Turret turret;
 
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
@@ -53,25 +53,25 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.create(hMap);
-        shooter = new Shooter(hMap);
+       /* shooter = new Shooter(hMap);
         turret = new Turret(hMap);
         stopper = new Stopper(hMap);
-        intake = new Intake(hMap);
+        intake = new Intake(hMap);*/
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        register(shooter);
+        /*register(shooter);
         register(turret);
         register(stopper);
-        register(intake);
+        register(intake);*/
 
     }
 
     private void configureButtons() {
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
                     stopper.setPos(0.2);
                     intake.setPower(1);
@@ -96,38 +96,9 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     intake.setPower(-1);
                     stopper.setPos(0);
                 }))
-                .whenInactive(new InstantCommand(() -> intake.setPower(0)));
-
-        /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
-
-        rightBumper.whenActive(new InstantCommand(() -> turret.setTargetPosition(1)))
-                .whenInactive(new InstantCommand(() -> turret.setTargetPosition(0)
-                ));*/
+                .whenInactive(new InstantCommand(() -> intake.setPower(0)));*/
 
 
-
-        /*GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
-
-        rightBumper.whileHeld(new ConditionalCommand(
-                new RotationOnlyAutoAlignCommand(0, follower),
-                new RotationOnlyAutoAlignCommand(0, follower),
-                () -> isRedAlliance
-        ));*/
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new ElevatorCommand(elevator, 1200))
-                .whenInactive(new ElevatorCommand(elevator, 0));ol*/
-
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> intake.setPower(1)))
-                .whenInactive(new InstantCommand(()->intake.setPower(0)));
-
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> intake.setPower(-1)))
-                .whenInactive(new InstantCommand(()->intake.setPower(0)));*/
-
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> trapdoor.setPos(1)))
-                .whenInactive(new InstantCommand(()->trapdoor.setPos(0)));*/
 
 
 
@@ -153,14 +124,14 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            shooter.setTargetVelocity(Shooter.targetVelocity);
-            turret.setTargetAngleRED(follower.pose(),follower.velocity());
+            //shooter.setTargetVelocity(Shooter.targetVelocity);
+            //turret.setTargetAngleRED(follower.pose(),follower.velocity());
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
 
-            telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
+            /*telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
             telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
 
@@ -168,7 +139,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
             telemetry.addData("Pose", follower.pose());
-            telemetry.addData("Turret Degrees", turret.getTargetAngle());
+            telemetry.addData("Turret Degrees", turret.getTargetAngle());*/
 
 
             telemetry.update();

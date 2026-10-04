@@ -67,9 +67,9 @@ public class Drive extends CommandOpMode {
 
         if (!Robot.isAutoAligned){
             DrivePowers powers = ManualDrive.fieldCentric(
-                    fwd,
-                    lat,
-                    rot,
+                    fwd*0.75,
+                    lat*0.75,
+                    rot*0.75,
                     bot.follower.pose().heading()
             );
             bot.follower.manual(powers);

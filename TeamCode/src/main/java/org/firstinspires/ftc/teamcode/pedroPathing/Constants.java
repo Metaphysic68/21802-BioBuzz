@@ -23,11 +23,14 @@ public class Constants {
         c.frontRightName.set("FR");
         c.backLeftName.set("BL");
         c.backRightName.set("BR");
-        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
-        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.frontLeftDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.frontRightDirection.set(DcMotorSimple.Direction.REVERSE);
+        c.backLeftDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.backRightDirection.set(DcMotorSimple.Direction.REVERSE);
         c.manualBrakeMode.set(true);
+
+
+
     });
 
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
@@ -39,6 +42,7 @@ public class Constants {
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
+
     });
 
     public static ForesightConfig foresightConfig = new ForesightConfig(
@@ -64,6 +68,7 @@ public class Constants {
                 c.maxAchievableStrafeVelocity.set(78.34700963911331);
                 c.naturalForwardDeceleration.set(34.68568606893622);
                 c.naturalStrafeDeceleration.set(51.05800116807612);
+
 
             }
     );
