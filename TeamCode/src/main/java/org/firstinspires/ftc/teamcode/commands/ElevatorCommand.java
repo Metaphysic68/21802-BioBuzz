@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsystems.Elevator;
-
 public class ElevatorCommand extends CommandBase {
 
     private final Elevator elevator;

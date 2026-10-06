@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -23,13 +24,20 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
     public Follower follower;
-    //public Elevator elevator;
-    //public Intake intake;
-    //public Trapdoor trapdoor;
+
+
+
+    public Drive Manejar;
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
     public double loops = 0, lastLoop = 0, loopTime = 0;
+
+    public double motor1 ;
+    public double motor2 ;
+    public double motor3;
+    public double motor4;
+
 
 
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
@@ -45,9 +53,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.create(hMap);
-        //elevator = new Elevator(hMap, telemetry);
-        //intake = new Intake(hMap,telemetry);
-        //trapdoor = new Trapdoor(hMap,telemetry);
+        Manejar = new Drive(hMap);
+
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
@@ -68,22 +75,25 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 new RotationOnlyAutoAlignCommand(0, follower),
                 new RotationOnlyAutoAlignCommand(0, follower),
                 () -> isRedAlliance
-        ));
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new ElevatorCommand(elevator, 1200))
-                .whenInactive(new ElevatorCommand(elevator, 0));ol*/
 
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> intake.setPower(1)))
-                .whenInactive(new InstantCommand(()->intake.setPower(0)));
 
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> intake.setPower(-1)))
-                .whenInactive(new InstantCommand(()->intake.setPower(0)));*/
+        double y = -DriverGamepad.getLeftY();
+        double x = DriverGamepad.getLeftX();
+        double rot = DriverGamepad.getRightX();
 
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(()-> trapdoor.setPos(1)))
-                .whenInactive(new InstantCommand(()->trapdoor.setPos(0)));*/
+
+           motor1 = y + x + rot;
+          motor2 = y - x - rot;
+         motor3 = y - x + rot;
+        motor4 = y + x - rot;
+
+
+
+
+
+
+    }
+
 
 
 
