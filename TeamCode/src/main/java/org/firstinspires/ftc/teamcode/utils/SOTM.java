@@ -7,12 +7,9 @@ import com.pedropathing.math.Velocity;
 public class SOTM {
 
 
-    public static double getTOF(double distance) {
-        return (0.0072 * distance) - 0.0237;
-    }
 
 
-    public static Pose calculateVirtualRobot(Pose robotPose, Velocity robotVelocity, Pose goal) {
+    public static Pose calculateVirtualRobot(Pose robotPose, Velocity robotVelocity, Pose goal, double TOF) {
         Vector2D velocity = robotVelocity.toVector2D();
         if (velocity.magnitude() < 1) return robotPose;
 
@@ -21,7 +18,7 @@ public class SOTM {
         Vector2D virtual = robotVector;
 
         for (int i = 0; i < 10; i++) {
-            virtual = robotVector.plus(velocity.times(getTOF(goalVector.distance(virtual))));
+            virtual = robotVector.plus(velocity.times(TOF));
         }
         return virtual.toPose(robotPose.heading());
     }

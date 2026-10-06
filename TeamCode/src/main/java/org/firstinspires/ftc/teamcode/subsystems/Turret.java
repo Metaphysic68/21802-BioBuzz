@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
@@ -16,7 +17,7 @@ public class Turret extends SubsystemBase {
 
     private final Servo turret;
     private final Servo turret2;
-
+    private final LookUpTable storage;
     public double targetAngle;
     public double targetPosition;
 
@@ -26,7 +27,7 @@ public class Turret extends SubsystemBase {
         public static double centerOffsetDegrees = 0;
     }
 
-    public Turret(HardwareMap hardwareMap) {
+    public Turret(HardwareMap hardwareMap, LookUpTable storage) {
         turret = hardwareMap.get(Servo.class, "turret");
         turret.setDirection(Servo.Direction.FORWARD);
         turret2 = hardwareMap.get(Servo.class, "turret2");
@@ -35,8 +36,7 @@ public class Turret extends SubsystemBase {
 
         turret.setPosition(0.5);
         turret2.setPosition(0.5);
-
-
+        this.storage = storage;
     }
     public void setTargetAngleRED(Pose robotPose, Velocity robotVelocity){
         setAngle(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
@@ -54,7 +54,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void setAngle(Pose goal, Pose robotPose, Velocity robotVelocity){
-        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal,storage.getTime(goal.distance(robotPose)));
 
         double fieldRadians = Math.atan2(goal.y() - robotPose.y(), goal.x() - robotPose.x());
         double angleDegrees = Math.toDegrees(fieldRadians - robotPose.heading());

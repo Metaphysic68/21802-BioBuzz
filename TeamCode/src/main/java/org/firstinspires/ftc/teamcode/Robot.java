@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Stopper;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -36,6 +37,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
     public double loops = 0, lastLoop = 0, loopTime = 0;
+    public LookUpTable storage;
+
 
 
 
@@ -53,6 +56,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     private void initSubsystems() {
         follower = Constants.create(hMap);
+        storage = new LookUpTable();
        /* shooter = new Shooter(hMap);
         turret = new Turret(hMap);
         stopper = new Stopper(hMap);

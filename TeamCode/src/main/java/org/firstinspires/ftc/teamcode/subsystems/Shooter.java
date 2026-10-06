@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.utils.CachedMotor;
+import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
 
@@ -21,6 +22,7 @@ public class Shooter extends SubsystemBase {
     private final DcMotorEx top;
     private final DcMotorEx bottom;
     private final Servo hood;
+    private final LookUpTable storage;
     double currentDistance;
     public static double targetVelocity;
     public static double targetPos;
@@ -31,7 +33,7 @@ public class Shooter extends SubsystemBase {
     public static double nominalVolts = 12.0;
 
 
-    public Shooter(HardwareMap hardwareMap) {
+    public Shooter(HardwareMap hardwareMap, LookUpTable storage) {
 
         top = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
         bottom = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
@@ -47,6 +49,7 @@ public class Shooter extends SubsystemBase {
         hood.setPosition(0);
 
         battery = hardwareMap.voltageSensor.iterator().next();
+        this.storage = storage;
     }
 
     @Override
@@ -102,16 +105,19 @@ public class Shooter extends SubsystemBase {
     private void setVelocityForHive(Pose goal, Pose robotPose, Velocity robotVelocity){
         currentDistance = goal.distance(robotPose);
 
-        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal);
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal,storage.getTime(currentDistance));
         double virtualDistance = goal.distance(virtualPose);
 
-        targetVelocity = (0.0068 * Math.pow (virtualDistance, 2)) + (5.2211 * virtualDistance) + 1262.9;
+        setTargetVelocity(storage.getRPM(virtualDistance));
+        setPos(storage.getHood(virtualDistance));
+
+        /*targetVelocity = (0.0068 * Math.pow (virtualDistance, 2)) + (5.2211 * virtualDistance) + 1262.9;
 
         double targetServoPos = (-3e-5 * Math.pow(virtualDistance, 2)) + (0.0123 * virtualDistance) - 0.4772;
         targetPos = targetServoPos;
         double safeHoodPos = Range.clip(targetServoPos, 0, 0.8);
 
-        hood.setPosition(safeHoodPos);
+        hood.setPosition(safeHoodPos);*/
     }
     public double getCurrentVelocity(){
         return top.getVelocity();
