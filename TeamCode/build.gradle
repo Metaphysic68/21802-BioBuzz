@@ -10,35 +10,50 @@
 
 
 // Custom definitions may go here
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        maven {
+            url "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.3.2"
 
+    }
+}
+repositories {
+    maven {
+        url = "https://repo.dairy.foundation/releases"
+    }
+    maven {
+        url = "https://repo.dairy.foundation/snapshots"
+    }
+}
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+
+
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
-        resources {
-            excludes += [
-                    'META-INF/DEPENDENCIES',
-                    'META-INF/LICENSE',
-                    'META-INF/LICENSE.txt',
-                    'META-INF/NOTICE',
-                    'META-INF/NOTICE.txt',
-                    'META-INF/*.kotlin_module',
-                    'META-INF/INDEX.LIST'
-            ]
-            pickFirsts += [
-                    'META-INF/*'
-            ]
-        }
-        jniLibs {
-            pickFirsts += ['**/*.so']
-        }
+        jniLibs.useLegacyPackaging true
     }
 }
 
+
+
 dependencies {
     implementation project(':FtcRobotController')
+
+
+
+
+
+
 }

@@ -3,14 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.seattlesolvers.solverslib.command.ConditionalCommand;
-import com.seattlesolvers.solverslib.command.button.GamepadButton;
+import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
-import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.commands.RotationOnlyAutoAlignCommand;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
@@ -23,7 +21,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
-    public Follower follower;
 
 
 
@@ -37,12 +34,17 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public double motor2 ;
     public double motor3;
     public double motor4;
+    Gamepad g1;
+    Gamepad g2;
 
 
 
-    public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
+    public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad, Gamepad g1, Gamepad g2) {
         this.hMap = hMap;
         this.telemetry = telemetry;
+        this.g1 = g1;
+        this.g2 = g2;
+
         DriverGamepad = driverGamepad;
         OperatorGamepad = operatorGamepad;
         this.isRedAlliance = PoseStorage.isRedAlliance;
@@ -52,7 +54,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        follower = Constants.create(hMap);
         Manejar = new Drive(hMap);
 
 
@@ -69,26 +70,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void configureButtons() {
-        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.RIGHT_BUMPER);
-
-        rightBumper.whileHeld(new ConditionalCommand(
-                new RotationOnlyAutoAlignCommand(0, follower),
-                new RotationOnlyAutoAlignCommand(0, follower),
-                () -> isRedAlliance
-
-
-        double y = -DriverGamepad.getLeftY();
-        double x = DriverGamepad.getLeftX();
-        double rot = DriverGamepad.getRightX();
-
-
-           motor1 = y + x + rot;
-          motor2 = y - x - rot;
-         motor3 = y - x + rot;
-        motor4 = y + x - rot;
-
-
-
 
 
 
@@ -99,7 +80,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
 
 
-    }
 
     public double getLoopTimeHz() {
         return 1000 / loopTime;
@@ -108,8 +88,21 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     @Override
     public void run() {
-        if (follower != null) {
 
+        double y = -g1.left_stick_y;
+        double x = g1.right_stick_x;
+        double rot = g1.left_stick_x;
+
+
+        motor1 = y + x + rot;
+        motor2 = y - x - rot;
+        motor3 = y - x + rot;
+        motor4 = y + x - rot;
+
+        Manejar.setPower1(motor1);
+        Manejar.setPower2(motor2);
+        Manejar.setPower3(motor3);
+        Manejar.setPower4(motor4);
 
             loops++;
 
@@ -127,8 +120,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             //telemetry.addData("Elevator Position", elevator.getPos());
             //telemetry.addData("Elevator At Target", elevator.isAtTarget());
             telemetry.update();
-            follower.update();
-        }
+
         super.run();
     }
 }
