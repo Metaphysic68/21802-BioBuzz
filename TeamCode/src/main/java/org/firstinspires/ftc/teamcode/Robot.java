@@ -40,9 +40,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public LookUpTable storage;
 
 
-
-
-
     public Robot(HardwareMap hMap, Telemetry telemetry, GamepadEx driverGamepad, GamepadEx operatorGamepad) {
         this.hMap = hMap;
         this.telemetry = telemetry;
@@ -101,10 +98,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     stopper.setPos(0);
                 }))
                 .whenInactive(new InstantCommand(() -> intake.setPower(0)));*/
-
-
-
-
 
 
 

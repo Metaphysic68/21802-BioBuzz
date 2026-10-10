@@ -33,7 +33,6 @@ public class Turret extends SubsystemBase {
         turret2 = hardwareMap.get(Servo.class, "turret2");
         turret2.setDirection(Servo.Direction.REVERSE);
 
-
         turret.setPosition(0.5);
         turret2.setPosition(0.5);
         this.storage = storage;
@@ -54,7 +53,7 @@ public class Turret extends SubsystemBase {
     }
 
     private void setAngle(Pose goal, Pose robotPose, Velocity robotVelocity){
-        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal,storage.getTime(goal.distance(robotPose)));
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity,storage.getTime(goal.distance(robotPose)));
 
         double fieldRadians = Math.atan2(goal.y() - robotPose.y(), goal.x() - robotPose.x());
         double angleDegrees = Math.toDegrees(fieldRadians - robotPose.heading());

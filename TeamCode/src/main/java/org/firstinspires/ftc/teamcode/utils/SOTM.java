@@ -5,16 +5,11 @@ import com.pedropathing.math.Vector2D;
 import com.pedropathing.math.Velocity;
 
 public class SOTM {
-
-
-
-
-    public static Pose calculateVirtualRobot(Pose robotPose, Velocity robotVelocity, Pose goal, double TOF) {
+    public static Pose calculateVirtualRobot(Pose robotPose, Velocity robotVelocity, double TOF) {
         Vector2D velocity = robotVelocity.toVector2D();
         if (velocity.magnitude() < 1) return robotPose;
 
         Vector2D robotVector = robotPose.toVector2D();
-        Vector2D goalVector = goal.toVector2D();
         Vector2D virtual = robotVector;
 
         for (int i = 0; i < 10; i++) {

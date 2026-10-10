@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.teamcode.utils.CachedMotor;
@@ -105,7 +104,7 @@ public class Shooter extends SubsystemBase {
     private void setVelocityForHive(Pose goal, Pose robotPose, Velocity robotVelocity){
         currentDistance = goal.distance(robotPose);
 
-        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity, goal,storage.getTime(currentDistance));
+        Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity,storage.getTime(currentDistance));
         double virtualDistance = goal.distance(virtualPose);
 
         setTargetVelocity(storage.getRPM(virtualDistance));
