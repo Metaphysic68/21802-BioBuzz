@@ -11,6 +11,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
 
     public Drive Manejar;
+    public Shooter Flywheel;
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
@@ -34,6 +36,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public double motor2 ;
     public double motor3;
     public double motor4;
+
+    public double TriggerD;
     Gamepad g1;
     Gamepad g2;
 
@@ -55,6 +59,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     private void initSubsystems() {
         Manejar = new Drive(hMap);
+
+        Flywheel = new Shooter(hMap);
 
 
         hubs = hMap.getAll(LynxModule.class);
@@ -94,17 +100,25 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         double rot = g1.left_stick_x;
 
 
+
         motor1 = y + x + rot;
         motor2 = y - x - rot;
         motor3 = y - x + rot;
-        motor4 = y + x - rot;
+
+
+        TriggerD = g1.right_trigger;
 
         Manejar.setPower1(motor1);
         Manejar.setPower2(motor2);
         Manejar.setPower3(motor3);
         Manejar.setPower4(motor4);
 
-            loops++;
+        Flywheel.setPower5(TriggerD);
+
+
+
+
+        loops++;
 
             if (loops > 10) {
                 double now = loop.milliseconds();
