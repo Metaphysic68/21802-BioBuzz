@@ -37,7 +37,7 @@ public class Drive extends CommandOpMode {
             bot.follower.setPose(new Pose(0,0));
             PoseStorage.currentPose = null;
         } else {
-            bot.follower.setPose(Robot.isRedAlliance ? new Pose(53.02800466744456,6.183780630105013,Math.toRadians(180)) : new Pose(0,0,Math.toRadians(180)));
+            bot.follower.setPose(Robot.isRedAlliance ? new Pose(0,0) : new Pose(0,0,Math.toRadians(180)));
         }
     }
 
@@ -67,9 +67,9 @@ public class Drive extends CommandOpMode {
 
         if (!Robot.isAutoAligned){
             DrivePowers powers = ManualDrive.fieldCentric(
-                    fwd*0.75,
-                    lat*0.75,
-                    rot*0.75,
+                    fwd,
+                    lat,
+                    rot,
                     bot.follower.pose().heading()
             );
             bot.follower.manual(powers);

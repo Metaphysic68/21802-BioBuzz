@@ -11,6 +11,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
@@ -29,7 +30,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static GamepadEx OperatorGamepad;
     public Follower follower;
     //public Intake intake;
-    //public Shooter shooter;
+    public Shooter shooter;
     //public Stopper stopper;
     //public Turret turret;
 
@@ -54,10 +55,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     private void initSubsystems() {
         follower = Constants.create(hMap);
         storage = new LookUpTable();
-       /* shooter = new Shooter(hMap);
-        turret = new Turret(hMap);
-        stopper = new Stopper(hMap);
-        intake = new Intake(hMap);*/
+        shooter = new Shooter(hMap,storage);
+        //turret = new Turret(hMap);
+        //stopper = new Stopper(hMap);
+        //intake = new Intake(hMap);
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
@@ -111,6 +112,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     @Override
     public void run() {
         if (follower != null) {
+
+            double voltage = 12.0;
+            if (!hubs.isEmpty()) {
+                voltage = hubs.get(0).getInputVoltage(VoltageUnit.VOLTS);
+            }
+
 
 
             loops++;

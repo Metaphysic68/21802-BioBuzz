@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Velocity;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,10 +23,10 @@ public class Shooter extends SubsystemBase {
     private final DcMotorEx bottom;
     private final Servo hood;
     private final LookUpTable storage;
-    double currentDistance;
+    private double currentDistance;
     public static double targetVelocity;
     public static double targetPos;
-    public static double kS = 0.11, kV = 0.00032, kP = 0.0004, useRaw = 60;
+    public static double kS = 0.11, kV = 0.00032, kP = 0.0004, bangThreshold = 60;
     private final VoltageSensor battery;
     private final ElapsedTime voltageTimer = new ElapsedTime();
     private double filteredVoltage = 12.0;
@@ -36,6 +37,9 @@ public class Shooter extends SubsystemBase {
 
         top = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
         bottom = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
+
+        top.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         top.setDirection(DcMotorSimple.Direction.REVERSE);
         bottom.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -49,6 +53,9 @@ public class Shooter extends SubsystemBase {
 
         battery = hardwareMap.voltageSensor.iterator().next();
         this.storage = storage;
+
+        filteredVoltage = battery.getVoltage();
+        targetVelocity = 0;
     }
 
     @Override
@@ -62,12 +69,14 @@ public class Shooter extends SubsystemBase {
             }
         }
 
-        if (Math.abs(getTargetVelocity() - getCurrentVelocity()) > useRaw) {
-            setPower(Math.signum(getTargetVelocity() - getCurrentVelocity()));
+        double error = getTargetVelocity() - getCurrentVelocity();
+
+        if (error > bangThreshold) {
+            setPower(1.0);
         }
         else{
-            double feedForwardCompensated = (kV * getTargetVelocity() + kS) * (nominalVolts/filteredVoltage);
-            setPower(Math.max(0, feedForwardCompensated + (kP * (getTargetVelocity() - getCurrentVelocity()))));
+            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS * Math.signum(getTargetVelocity())) * (nominalVolts/filteredVoltage);
+            setPower(Math.max(0, Math.min(1,powerCompensated)));
         }
     }
 
@@ -79,11 +88,13 @@ public class Shooter extends SubsystemBase {
     public void setTargetVelocity(double vel){
        targetVelocity = vel;
     }
-
-
     public void setPos(double pos){
         targetPos = pos;
         hood.setPosition(pos);
+    }
+    public boolean atTarget(double tolerance) {
+        return getTargetVelocity() > 0
+                && Math.abs(getTargetVelocity() - getCurrentVelocity()) < tolerance;
     }
 
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
