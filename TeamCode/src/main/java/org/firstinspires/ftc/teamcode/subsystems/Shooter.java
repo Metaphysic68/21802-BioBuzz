@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
@@ -30,7 +31,6 @@ public class Shooter extends SubsystemBase {
     private final VoltageSensor battery;
     private final ElapsedTime voltageTimer = new ElapsedTime();
     private double filteredVoltage = 12.0;
-    public static double nominalVolts = 12.0;
 
 
     public Shooter(HardwareMap hardwareMap, LookUpTable storage) {
@@ -68,14 +68,13 @@ public class Shooter extends SubsystemBase {
                 filteredVoltage += 0.3 * (v - filteredVoltage);
             }
         }
-
         double error = getTargetVelocity() - getCurrentVelocity();
 
         if (error > bangThreshold) {
             setPower(1.0);
         }
         else{
-            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS * Math.signum(getTargetVelocity())) * (nominalVolts/filteredVoltage);
+            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS) * (12.0/filteredVoltage);
             setPower(Math.max(0, Math.min(1,powerCompensated)));
         }
     }
@@ -84,7 +83,6 @@ public class Shooter extends SubsystemBase {
         top.setPower(p);
         bottom.setPower(p);
     }
-
     public void setTargetVelocity(double vel){
        targetVelocity = vel;
     }

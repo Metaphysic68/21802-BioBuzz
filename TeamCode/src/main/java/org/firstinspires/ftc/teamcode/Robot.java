@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Stopper;
-import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
@@ -28,10 +27,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
-    public Follower follower;
-    //public Intake intake;
-    public Shooter shooter;
-    //public Stopper stopper;
+    //public Follower follower;
+    public Intake intake;
+    //public Shooter shooter;
+    public Stopper stopper;
     //public Turret turret;
 
     public static boolean isRedAlliance;
@@ -53,27 +52,26 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        follower = Constants.create(hMap);
+        //follower = Constants.create(hMap);
         storage = new LookUpTable();
-        shooter = new Shooter(hMap,storage);
+        //shooter = new Shooter(hMap,storage);
         //turret = new Turret(hMap);
-        //stopper = new Stopper(hMap);
-        //intake = new Intake(hMap);
+        stopper = new Stopper(hMap);
+        intake = new Intake(hMap);
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-
-        /*register(shooter);
-        register(turret);
-        register(stopper);
-        register(intake);*/
+        //register(shooter);
+        //register(turret);
+        //register(stopper);
+        //register(intake);
 
     }
 
     private void configureButtons() {
-        /*new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
+        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
                     stopper.setPos(0.2);
                     intake.setPower(1);
@@ -98,7 +96,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     intake.setPower(-1);
                     stopper.setPos(0);
                 }))
-                .whenInactive(new InstantCommand(() -> intake.setPower(0)));*/
+                .whenInactive(new InstantCommand(() -> intake.setPower(0)));
 
 
 
@@ -111,14 +109,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     @Override
     public void run() {
-        if (follower != null) {
-
-            double voltage = 12.0;
-            if (!hubs.isEmpty()) {
-                voltage = hubs.get(0).getInputVoltage(VoltageUnit.VOLTS);
-            }
-
-
+        //if (follower != null) {
 
             loops++;
 
@@ -147,8 +138,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
 
             telemetry.update();
-            follower.update();
-        }
+            //follower.update();
+        //}
         super.run();
     }
 }
