@@ -17,8 +17,8 @@ public class Drive extends SubsystemBase {
         Motor3 = hardwareMap.get(DcMotorEx.class, "Driver3");
         Motor4 = hardwareMap.get(DcMotorEx.class, "Driver4");
 
-        Motor1.setDirection(DcMotorSimple.Direction.FORWARD);
-        Motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor2.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor3.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor4.setDirection(DcMotorSimple.Direction.FORWARD);
 

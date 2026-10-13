@@ -11,6 +11,8 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.Indexer;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
@@ -26,6 +28,9 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
 
     public Drive Manejar;
+
+    public Indexer Mantener;
+    public Intake Recolectar;
     public Shooter Flywheel;
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
@@ -96,14 +101,15 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public void run() {
 
         double y = -g1.left_stick_y;
-        double x = g1.right_stick_x;
-        double rot = g1.left_stick_x;
+        double x = g1.left_stick_x;
+        double rot = g1.right_stick_x;
 
 
 
         motor1 = y + x + rot;
         motor2 = y - x - rot;
         motor3 = y - x + rot;
+        motor4 = y + x - rot;
 
 
         TriggerD = g1.right_trigger;
@@ -113,7 +119,14 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         Manejar.setPower3(motor3);
         Manejar.setPower4(motor4);
 
-        Flywheel.setPower5(TriggerD);
+
+        Flywheel.actualizarPF();
+
+        Recolectar.setPowerIntake(1);
+
+        Mantener.setPowerServo(1);
+
+
 
 
 
@@ -130,6 +143,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            telemetry.addData("Velocidad Objetivo", Flywheel.getVelocidadObjetivo());
+            telemetry.addData("Current Velocity", Flywheel.getVelocidad());
             //telemetry.addData("Elevator Target", elevator.getTargetPosition());
             //telemetry.addData("Elevator Position", elevator.getPos());
             //telemetry.addData("Elevator At Target", elevator.isAtTarget());
