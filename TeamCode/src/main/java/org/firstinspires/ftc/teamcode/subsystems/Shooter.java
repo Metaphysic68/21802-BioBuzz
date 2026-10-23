@@ -26,11 +26,9 @@ public class Shooter extends SubsystemBase {
     private final LookUpTable storage;
     private double currentDistance;
     public static double targetVelocity;
-    public static double targetPos;
-    public static double kS = 0.11, kV = 0.00032, kP = 0.0004, bangThreshold = 60;
+    public static double targetPos = 0.1;
+    public static double kS = 0.13, kV = 0.00047, kP = 0.00057, bangThreshold = 60;
     private final VoltageSensor battery;
-    private final ElapsedTime voltageTimer = new ElapsedTime();
-    private double filteredVoltage = 12.0;
 
 
     public Shooter(HardwareMap hardwareMap, LookUpTable storage) {
@@ -42,39 +40,33 @@ public class Shooter extends SubsystemBase {
         bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         top.setDirection(DcMotorSimple.Direction.REVERSE);
-        bottom.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottom.setDirection(DcMotorSimple.Direction.REVERSE);
 
         top.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         bottom.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         hood = hardwareMap.get(Servo.class,"hood");
         hood.setDirection(Servo.Direction.FORWARD);
-        hood.setPosition(0);
+        hood.setPosition(0.1);
 
         battery = hardwareMap.voltageSensor.iterator().next();
         this.storage = storage;
 
-        filteredVoltage = battery.getVoltage();
+
         targetVelocity = 0;
     }
 
     @Override
     public void periodic(){
+        hood.setPosition(targetPos);
 
-        if (voltageTimer.milliseconds() > 250) {
-            voltageTimer.reset();
-            double v = battery.getVoltage();
-            if (v > 6) {
-                filteredVoltage += 0.3 * (v - filteredVoltage);
-            }
-        }
         double error = getTargetVelocity() - getCurrentVelocity();
 
         if (error > bangThreshold) {
             setPower(1.0);
         }
         else{
-            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS) * (12.0/filteredVoltage);
+            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS) * (12.0/battery.getVoltage());
             setPower(Math.max(0, Math.min(1,powerCompensated)));
         }
     }
@@ -93,6 +85,9 @@ public class Shooter extends SubsystemBase {
     public boolean atTarget(double tolerance) {
         return getTargetVelocity() > 0
                 && Math.abs(getTargetVelocity() - getCurrentVelocity()) < tolerance;
+    }
+    public double getVoltage(){
+        return battery.getVoltage();
     }
 
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){

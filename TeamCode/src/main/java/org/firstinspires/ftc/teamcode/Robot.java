@@ -13,9 +13,11 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Flower;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Stopper;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
@@ -27,11 +29,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public final Telemetry telemetry;
     public static GamepadEx DriverGamepad;
     public static GamepadEx OperatorGamepad;
-    //public Follower follower;
+    public Follower follower;
+    public Flower flower;
     public Intake intake;
-    //public Shooter shooter;
+    public Shooter shooter;
     public Stopper stopper;
-    //public Turret turret;
+    public Turret turret;
 
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
@@ -52,51 +55,62 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void initSubsystems() {
-        //follower = Constants.create(hMap);
+        follower = Constants.create(hMap);
         storage = new LookUpTable();
-        //shooter = new Shooter(hMap,storage);
-        //turret = new Turret(hMap);
+        shooter = new Shooter(hMap,storage);
+        turret = new Turret(hMap,storage);
         stopper = new Stopper(hMap);
         intake = new Intake(hMap);
+        flower = new Flower(hMap);
 
         hubs = hMap.getAll(LynxModule.class);
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-        //register(shooter);
-        //register(turret);
-        //register(stopper);
-        //register(intake);
+        register(shooter);
+        register(turret);
+        register(stopper);
+        register(intake);
+        register(flower);
 
     }
 
     private void configureButtons() {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    stopper.setPos(0.2);
+                    stopper.setPos(0);
                     intake.setPower(1);
                 }))
                 .whenInactive(new InstantCommand(() -> {
-                    intake.setPower(0);
+                    intake.setPower(0.2);
                     stopper.setPos(0);
                 }));
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
                     intake.setPower(1);
-                    stopper.setPos(0);
+                    stopper.setPos(0.2);
                 }))
                 .whenInactive(new InstantCommand(() ->
                         intake.setPower(0)
                 ));
 
-        GamepadButton rightBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.DPAD_DOWN);
+        GamepadButton dPadDown = new GamepadButton(DriverGamepad, GamepadKeys.Button.DPAD_DOWN);
 
-            rightBumper.whenActive(new InstantCommand(() -> {
+        dPadDown.whenActive(new InstantCommand(() -> {
                     intake.setPower(-1);
-                    stopper.setPos(0);
+                    stopper.setPos(0.2);
                 }))
                 .whenInactive(new InstantCommand(() -> intake.setPower(0)));
+
+        GamepadButton leftBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.LEFT_BUMPER);
+
+        leftBumper.whenActive(new InstantCommand(() -> {
+                    flower.setPos(0.425);
+                }))
+                .whenInactive(new InstantCommand(() -> {
+                    flower.setPos(0);
+                }));
 
 
 
@@ -109,7 +123,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
     @Override
     public void run() {
-        //if (follower != null) {
+        if (follower != null) {
 
             loops++;
 
@@ -119,14 +133,14 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            //shooter.setTargetVelocity(Shooter.targetVelocity);
+
             //turret.setTargetAngleRED(follower.pose(),follower.velocity());
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
             telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
 
-            /*telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
+            telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
             telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
 
@@ -134,12 +148,12 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
             telemetry.addData("Pose", follower.pose());
-            telemetry.addData("Turret Degrees", turret.getTargetAngle());*/
+            telemetry.addData("Turret Degrees", turret.getTargetAngle());
 
 
             telemetry.update();
-            //follower.update();
-        //}
+            follower.update();
+        }
         super.run();
     }
 }

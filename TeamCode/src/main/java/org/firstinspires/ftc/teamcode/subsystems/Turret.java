@@ -21,17 +21,16 @@ public class Turret extends SubsystemBase {
     public double targetAngle;
     public double targetPosition;
 
+
     @Config
     public static class TurretConstants {
-        public static double servoRange = 270;
+        public static double servoRange = 320;
         public static double centerOffsetDegrees = 0;
     }
 
     public Turret(HardwareMap hardwareMap, LookUpTable storage) {
         turret = hardwareMap.get(Servo.class, "turret");
-        turret.setDirection(Servo.Direction.FORWARD);
         turret2 = hardwareMap.get(Servo.class, "turret2");
-        turret2.setDirection(Servo.Direction.REVERSE);
 
         turret.setPosition(0.5);
         turret2.setPosition(0.5);

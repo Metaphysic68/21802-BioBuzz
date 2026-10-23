@@ -8,8 +8,8 @@ import static com.pedropathing.api.Paths.*;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
-import org.firstinspires.ftc.teamcode.commands.follow;
 
 public class AutoRunPath extends SequentialCommandGroup {
 
@@ -56,12 +56,12 @@ public class AutoRunPath extends SequentialCommandGroup {
 
     public AutoRunPath(Follower f) {
         addCommands(
-                new follow(f,path1()),
-                new follow(f,path2()),
-                new follow(f,path3()),
-                new follow(f,path4()),
-                new follow(f,path5()),
-                new follow(f,path6())
+                new FollowPathCommand(f,path1()),
+                new FollowPathCommand(f,path2()),
+                new FollowPathCommand(f,path3()),
+                new FollowPathCommand(f,path4()),
+                new FollowPathCommand(f,path5()),
+                new FollowPathCommand(f,path6())
 
 
                 );

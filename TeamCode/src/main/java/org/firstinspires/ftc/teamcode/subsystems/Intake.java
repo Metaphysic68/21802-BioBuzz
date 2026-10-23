@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
     private final CachedMotor intake1;
 
     private final CachedMotor intake2;
-    //private DigitalChannel laserInput;
+    //private final DigitalChannel laserInput;
     //private final Timer timer;
     //private final Servo light;
 
@@ -28,33 +28,32 @@ public class Intake extends SubsystemBase {
         intake1 = new CachedMotor(hMap.get(DcMotorEx.class, "intake1"));
         intake1.setDirection(DcMotorSimple.Direction.REVERSE);
         intake2 = new CachedMotor(hMap.get(DcMotorEx.class, "intake2"));
-        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*laserInput = hMap.get(DigitalChannel.class, "laserDigitalInput");
         laserInput.setMode(DigitalChannel.Mode.INPUT);
 
         light = hMap.get(Servo.class,"light");
-        light.setPosition(0.333);
+        light.setPosition(0.333);*/
 
 
-        intake2 = hMap.get(DcMotorEx.class, "intake2");
-        intake2.setDirection(DcMotorSimple.Direction.REVERSE);*/
+
 
 
 
     }
-    @Override
+    /*@Override
     public void periodic(){
-        /*boolean detected = laserInput.getState();
+        boolean detected = laserInput.getState();
 
         if (detected){
             timer.reset();
             light.setPosition(0.333);
         } if (detected && timer.milliseconds() > 50){
             light.setPosition(0.5);
-        }*/
+        }
 
-    }
+    }*/
 
 
     public void setPower(double vel){

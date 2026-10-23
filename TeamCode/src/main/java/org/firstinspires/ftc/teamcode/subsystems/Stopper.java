@@ -11,7 +11,7 @@ public class Stopper extends SubsystemBase {
     public Stopper(HardwareMap hMap) {
 
         stopper = hMap.get(Servo.class, "stopper");
-        stopper.setDirection(Servo.Direction.FORWARD);
+        stopper.setDirection(Servo.Direction.REVERSE);
         stopper.setPosition(0);
 
 
