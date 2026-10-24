@@ -39,6 +39,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static boolean isRedAlliance;
     private List<LynxModule> hubs;
     private final Timer loop = new Timer();
+    private final Timer volt = new Timer();
+
     public double loops = 0, lastLoop = 0, loopTime = 0;
     public LookUpTable storage;
 
@@ -124,10 +126,11 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     @Override
     public void run() {
         if (follower != null) {
-
             double voltage = 12.0;
-            if (!hubs.isEmpty()) {
+
+            if (volt.milliseconds()>250 && !hubs.isEmpty()){
                 voltage = hubs.get(0).getInputVoltage(VoltageUnit.VOLTS);
+                volt.reset();
             }
 
             loops++;
@@ -140,7 +143,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             }
             shooter.setVoltage(voltage);
 
-            //turret.setTargetAngleRED(follower.pose(),follower.velocity());
+            turret.setTargetAngleRED(follower.pose(),follower.velocity());
 
             telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
             telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());

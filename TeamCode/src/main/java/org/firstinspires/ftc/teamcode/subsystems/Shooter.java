@@ -50,6 +50,7 @@ public class Shooter extends SubsystemBase {
         hood.setPosition(0.1);
 
 
+
         this.storage = storage;
 
 
@@ -58,6 +59,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic(){
+
         hood.setPosition(targetPos);
 
         double error = getTargetVelocity() - getCurrentVelocity();
