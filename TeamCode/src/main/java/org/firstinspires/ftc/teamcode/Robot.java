@@ -125,6 +125,11 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public void run() {
         if (follower != null) {
 
+            double voltage = 12.0;
+            if (!hubs.isEmpty()) {
+                voltage = hubs.get(0).getInputVoltage(VoltageUnit.VOLTS);
+            }
+
             loops++;
 
             if (loops > 10) {
@@ -133,6 +138,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
+            shooter.setVoltage(voltage);
 
             //turret.setTargetAngleRED(follower.pose(),follower.velocity());
 
@@ -143,12 +149,17 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
             telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
+            telemetry.addData("Power - ShooterT", "%.2f", shooter.getPowerTop());
+            telemetry.addData("Power - ShooterB", "%.2f", shooter.getPowerBottom());
+
 
             telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
             telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
             telemetry.addData("Pose", follower.pose());
             telemetry.addData("Turret Degrees", turret.getTargetAngle());
+
+            telemetry.addData("Voltage", voltage);
 
 
             telemetry.update();

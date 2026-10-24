@@ -27,8 +27,8 @@ public class Shooter extends SubsystemBase {
     private double currentDistance;
     public static double targetVelocity;
     public static double targetPos = 0.1;
-    public static double kS = 0.13, kV = 0.00047, kP = 0.00057, bangThreshold = 60;
-    private final VoltageSensor battery;
+    public static double kS = 0.07, kV = 0.00047, kP = 0.0005, bangThreshold = 60;
+    public double voltage = 12.0;
 
 
     public Shooter(HardwareMap hardwareMap, LookUpTable storage) {
@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
         hood.setDirection(Servo.Direction.FORWARD);
         hood.setPosition(0.1);
 
-        battery = hardwareMap.voltageSensor.iterator().next();
+
         this.storage = storage;
 
 
@@ -66,7 +66,7 @@ public class Shooter extends SubsystemBase {
             setPower(1.0);
         }
         else{
-            double powerCompensated = (kP * error + kV * getTargetVelocity() + kS) * (12.0/battery.getVoltage());
+            double powerCompensated = (kP * error + kV*getTargetVelocity() + kS) * (12.0/voltage);
             setPower(Math.max(0, Math.min(1,powerCompensated)));
         }
     }
@@ -74,6 +74,9 @@ public class Shooter extends SubsystemBase {
     public void setPower(double p) {
         top.setPower(p);
         bottom.setPower(p);
+    }
+    public void setVoltage(double vol){
+        voltage = vol;
     }
     public void setTargetVelocity(double vel){
        targetVelocity = vel;
@@ -86,9 +89,7 @@ public class Shooter extends SubsystemBase {
         return getTargetVelocity() > 0
                 && Math.abs(getTargetVelocity() - getCurrentVelocity()) < tolerance;
     }
-    public double getVoltage(){
-        return battery.getVoltage();
-    }
+
 
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
         if (robotPose.y() > 72){
