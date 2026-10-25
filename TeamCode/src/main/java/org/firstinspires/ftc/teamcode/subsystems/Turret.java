@@ -40,7 +40,6 @@ public class Turret extends SubsystemBase {
         setAngle(RobotConstants.RED_GOAL_RIGHT, robotPose, robotVelocity);
         if (robotPose.y() > 72){
             setAngle(RobotConstants.RED_GOAL_LEFT, robotPose, robotVelocity);
-
         }
     }
     public void setTargetAngleBLUE(Pose robotPose, Velocity robotVelocity){
@@ -60,9 +59,9 @@ public class Turret extends SubsystemBase {
         while (angleDegrees > 180) angleDegrees -= 360;
         while (angleDegrees <= -180) angleDegrees += 360;
 
-        double TURRET_MIN_ANGLE_DEGREES = -135.0;
+        double TURRET_MIN_ANGLE_DEGREES = -160.0;
         // Can turn 135 deg right
-        double TURRET_MAX_ANGLE_DEGREES = 135.0;
+        double TURRET_MAX_ANGLE_DEGREES = 160.0;
         double MaxAngleDegrees = Math.max(TURRET_MIN_ANGLE_DEGREES,
                 Math.min(TURRET_MAX_ANGLE_DEGREES, angleDegrees));
 
