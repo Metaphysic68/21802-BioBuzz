@@ -69,6 +69,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         for (LynxModule hub : hubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
+
         register(shooter);
         register(turret);
         register(stopper);
@@ -84,8 +85,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                     intake.setPower(1);
                 }))
                 .whenInactive(new InstantCommand(() -> {
-                    intake.setPower(0.2);
-                    stopper.setPos(0);
+                    intake.setPower(0);
+                    stopper.setPos(0.2);
                 }));
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
@@ -107,12 +108,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         GamepadButton leftBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.LEFT_BUMPER);
 
-        leftBumper.whenActive(new InstantCommand(() -> {
-                    flower.setPos(0.425);
-                }))
-                .whenInactive(new InstantCommand(() -> {
-                    flower.setPos(0);
-                }));
+        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.425)))
+                .whenInactive(new InstantCommand(() -> flower.setPos(0)));
 
 
 

@@ -8,11 +8,12 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.paths.AutoRunPath;
+import org.firstinspires.ftc.teamcode.paths.TwoTipBLUE;
+import org.firstinspires.ftc.teamcode.paths.TwoTipRED;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
-@Autonomous(name = "AutoRun", group = "Autos", preselectTeleOp = "Drive")
-public class AutoRun extends LinearOpMode {
+@Autonomous(name = "TwoTipBLUEAuto", group = "Autos", preselectTeleOp = "Drive")
+public class TwoTipBLUEAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -24,19 +25,19 @@ public class AutoRun extends LinearOpMode {
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
         bot.isRedAlliance = true;
 
-       // bot.follower.setPose(new Pose(85.9929, 9.9183, 0));
+        bot.follower.setPose(new Pose(54.4172, 6, Math.toRadians(180)));
 
         waitForStart();
 
         if (opModeIsActive()) {
-           // CommandScheduler.getInstance().schedule(new AutoRunPath(bot.follower));
+            CommandScheduler.getInstance().schedule(new TwoTipBLUE(bot.follower, bot.intake,bot.stopper,bot.flower));
         }
 
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().run();
             bot.run();
 
-           // PoseStorage.currentPose = bot.follower.pose();
+            PoseStorage.currentPose = bot.follower.pose();
             telemetry.update();
         }
 

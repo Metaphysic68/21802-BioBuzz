@@ -19,9 +19,6 @@ public class Intake extends SubsystemBase {
     private final Timer timer;
     private final Servo light;
 
-
-
-
     public Intake(HardwareMap hMap) {
         timer = new Timer();
 
@@ -35,11 +32,6 @@ public class Intake extends SubsystemBase {
 
         light = hMap.get(Servo.class,"led1");
         light.setPosition(0.72);
-
-
-
-
-
 
     }
     @Override
