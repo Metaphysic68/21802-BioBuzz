@@ -22,9 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Stopper;
 public class TwoTipBLUE extends SequentialCommandGroup {
 
 
-    private PoseFactory poseFactory = PoseFactory.degrees();
-
-
+    private final PoseFactory poseFactory = PoseFactory.degrees().mirrorY(70.75).mirrorX(70.75);
     private final Pose intakeSideStart = poseFactory.of(54.4172, 6, 180);
     private final Pose intakeSide = poseFactory.of(8, 6, 180);
     private final Pose secondTip1 = poseFactory.of(55.2953, 118.7919, -178.1826);
@@ -70,10 +68,6 @@ public class TwoTipBLUE extends SequentialCommandGroup {
     }
 
     public TwoTipBLUE(Follower f, Intake i, Stopper s, Flower fl) {
-        poseFactory = poseFactory.mirrorX(70.75);
-        poseFactory = poseFactory.mirrorY(70.75);
-
-
 
         addCommands(
                 new WaitCommand(500),
