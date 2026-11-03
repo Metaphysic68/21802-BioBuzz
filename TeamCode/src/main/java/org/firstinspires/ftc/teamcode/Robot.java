@@ -21,8 +21,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.PoseStorage;
 
-import java.util.List;
-
 public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public static boolean isAutoAligned;
     public final HardwareMap hMap;
@@ -37,7 +35,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public Turret turret;
 
     public static boolean isRedAlliance;
-    private List<LynxModule> hubs;
+    private static final double TELEMETRY_INTERVAL_MS = 100;
+    private final Timer telemetryTimer = new Timer();
     private final Timer loop = new Timer();
     private final Timer volt = new Timer();
 
@@ -65,10 +64,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         intake = new Intake(hMap);
         flower = new Flower(hMap);
 
-        hubs = hMap.getAll(LynxModule.class);
-        for (LynxModule hub : hubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
+        // MANUAL does one bulk read per loop; the scheduler clears the cache at the end of its run
+        setBulkReading(hMap, LynxModule.BulkCachingMode.MANUAL);
 
         register(shooter);
         register(turret);
@@ -82,7 +79,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
                     stopper.setPos(0);
-                    intake.setPower(1);
+                    intake.setPower(0.93); //0.88
                 }))
                 .whenInactive(new InstantCommand(() -> {
                     intake.setPower(0);
@@ -108,7 +105,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         GamepadButton leftBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.LEFT_BUMPER);
 
-        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.425)))
+        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.6)))
                 .whenInactive(new InstantCommand(() -> flower.setPos(0)));
 
 
@@ -123,12 +120,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     @Override
     public void run() {
         if (follower != null) {
-            double voltage = 12.0;
 
-            if (volt.milliseconds()>250 && !hubs.isEmpty()){
-                voltage = hubs.get(0).getInputVoltage(VoltageUnit.VOLTS);
-                volt.reset();
-            }
 
             loops++;
 
@@ -138,31 +130,34 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            shooter.setVoltage(voltage);
-
-            turret.setTargetAngleRED(follower.pose(),follower.velocity());
-
-            telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
-            telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
-            telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
+            turret.setTargetPosition(0.5);
 
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
-            telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
-            telemetry.addData("Power - ShooterT", "%.2f", shooter.getPowerTop());
-            telemetry.addData("Power - ShooterB", "%.2f", shooter.getPowerBottom());
 
 
-            telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
-            telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
 
-            telemetry.addData("Pose", follower.pose());
-            telemetry.addData("Turret Degrees", turret.getTargetAngle());
-
-            telemetry.addData("Voltage", voltage);
+                telemetry.addData("Loop Time (ms)", "%.2f", loopTime);
+                telemetry.addData("Loop Rate (Hz)", "%.1f", getLoopTimeHz());
+                telemetry.addData("Team", isRedAlliance ? "Red" : "Blue");
 
 
-            telemetry.update();
+                telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
+                telemetry.addData("Power - ShooterT", "%.2f", shooter.getPowerTop());
+                telemetry.addData("Power - ShooterB", "%.2f", shooter.getPowerBottom());
+
+
+                telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
+                telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
+
+                telemetry.addData("Pose", follower.pose());
+                telemetry.addData("Turret Degrees", turret.getTargetAngle());
+
+                telemetry.addData("Voltage", shooter.getVoltage());
+
+
+                telemetry.update();
+
             follower.update();
         }
         super.run();

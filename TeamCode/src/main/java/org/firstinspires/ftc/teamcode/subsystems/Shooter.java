@@ -8,11 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.controller.PIDFController;
 
-import org.firstinspires.ftc.teamcode.utils.CachedMotor;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
@@ -25,16 +22,17 @@ public class Shooter extends SubsystemBase {
     private final Servo hood;
     private final LookUpTable storage;
     private double currentDistance;
-    public static double targetVelocity;
+    public static double targetVelocity; //1380
     public static double targetPos = 0.1;
-    public static double kS = 0.07, kV = 0.00047, kP = 0.0005, bangThreshold = 60;
-    public double voltage = 12.0;
+    public static double kS = 0, kV = 0.00042727, kP = 0.00092345, bangThreshold = 60;
 
+    public double voltage = 12.0;
+    private final VoltageSensor battery;
 
     public Shooter(HardwareMap hardwareMap, LookUpTable storage) {
 
-        top = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter"));
-        bottom = new CachedMotor(hardwareMap.get(DcMotorEx.class, "shooter2"));
+        top = hardwareMap.get(DcMotorEx.class, "shooter");
+        bottom = hardwareMap.get(DcMotorEx.class, "shooter2");
 
         top.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -47,9 +45,11 @@ public class Shooter extends SubsystemBase {
 
         hood = hardwareMap.get(Servo.class,"hood");
         hood.setDirection(Servo.Direction.FORWARD);
-        hood.setPosition(0.1);
+        hood.setPosition(0);
 
 
+        battery = hardwareMap.voltageSensor.iterator().next();
+        voltage = battery.getVoltage();
 
         this.storage = storage;
 
@@ -59,6 +59,10 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic(){
+
+
+        voltage = battery.getVoltage();
+
 
         hood.setPosition(targetPos);
 
@@ -77,8 +81,8 @@ public class Shooter extends SubsystemBase {
         top.setPower(p);
         bottom.setPower(p);
     }
-    public void setVoltage(double vol){
-        voltage = vol;
+    public double getVoltage(){
+        return voltage;
     }
     public void setTargetVelocity(double vel){
        targetVelocity = vel;

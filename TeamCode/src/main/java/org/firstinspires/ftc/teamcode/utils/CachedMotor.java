@@ -395,7 +395,7 @@ public class CachedMotor implements DcMotorEx {
     @Override
     public void setPower(double power) {
         power = MathUtils.clamp(power, -1, 1);
-        if (Math.abs(this.power - power) < 0.01) return;
+        if (Math.abs(this.power - power) < 0.000000001) return;
         this.power = power;
         motor.setPower(power);
     }

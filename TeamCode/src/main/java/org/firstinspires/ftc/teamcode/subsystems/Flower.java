@@ -5,23 +5,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class Flower extends SubsystemBase {
-    private final Servo flower;
-
-
+    private final Servo flowerL;
+    private final Servo flowerR;
     public Flower(HardwareMap hMap) {
 
-        flower = hMap.get(Servo.class, "flower");
-        flower.setDirection(Servo.Direction.REVERSE);
-        flower.setPosition(0);
+        flowerL = hMap.get(Servo.class, "flowerL");
+        flowerL.setDirection(Servo.Direction.FORWARD);
+        flowerL.setPosition(0);
+
+
+        flowerR = hMap.get(Servo.class, "flowerR");
+        flowerR.setDirection(Servo.Direction.REVERSE);
+        flowerR.setPosition(0);
 
 
     }
 
     public void setPos(double pos) {
-        flower.setPosition(pos);
+        flowerL.setPosition(pos);
+        flowerR.setPosition(pos);
+
     }
 
     public double getPos() {
-        return flower.getPosition();
+        return flowerL.getPosition();
     }
 }

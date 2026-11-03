@@ -33,11 +33,9 @@ public class TwoTipREDAuto extends LinearOpMode {
         }
 
         while (opModeIsActive() && !isStopRequested()) {
-            CommandScheduler.getInstance().run();
             bot.run();
 
             PoseStorage.currentPose = bot.follower.pose();
-            telemetry.update();
         }
 
         CommandScheduler.getInstance().reset();

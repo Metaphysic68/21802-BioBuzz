@@ -20,12 +20,13 @@ public class TwoTipBLUEAuto extends LinearOpMode {
         CommandScheduler.getInstance().reset();
 
         PoseStorage.currentPose = null;
-        PoseStorage.isRedAlliance = true;
+        PoseStorage.isRedAlliance = false;
 
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
-        bot.isRedAlliance = true;
+        bot.isRedAlliance = false;
 
-        bot.follower.setPose(new Pose(54.4172, 6, Math.toRadians(180)));
+        // Same start as TwoTipRED, mirrored through (70.75, 70.75) to match the TwoTipBLUE path
+        bot.follower.setPose(new Pose(87.0828, 135.5, Math.toRadians(0)));
 
         waitForStart();
 
@@ -34,11 +35,9 @@ public class TwoTipBLUEAuto extends LinearOpMode {
         }
 
         while (opModeIsActive() && !isStopRequested()) {
-            CommandScheduler.getInstance().run();
             bot.run();
 
             PoseStorage.currentPose = bot.follower.pose();
-            telemetry.update();
         }
 
         CommandScheduler.getInstance().reset();
