@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -35,7 +36,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public Turret turret;
 
     public static boolean isRedAlliance;
-    private static final double TELEMETRY_INTERVAL_MS = 100;
+    private static double intakePower = 1;
     private final Timer telemetryTimer = new Timer();
     private final Timer loop = new Timer();
     private final Timer volt = new Timer();
@@ -76,24 +77,18 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     }
 
     private void configureButtons() {
+
+
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
+                    intake.setPower(intakePower);
                     stopper.setPos(0);
-                    intake.setPower(0.75); //0.88
                 }))
                 .whenInactive(new InstantCommand(() -> {
                     intake.setPower(0);
                     stopper.setPos(0.2);
                 }));
 
-        new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5)
-                .whenActive(new InstantCommand(() -> {
-                    intake.setPower(1);
-                    stopper.setPos(0.2);
-                }))
-                .whenInactive(new InstantCommand(() ->
-                        intake.setPower(0)
-                ));
 
         GamepadButton dPadDown = new GamepadButton(DriverGamepad, GamepadKeys.Button.DPAD_DOWN);
 
