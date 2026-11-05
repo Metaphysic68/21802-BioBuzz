@@ -23,8 +23,8 @@ public class Shooter extends SubsystemBase {
     private final LookUpTable storage;
     private double currentDistance;
     public static double targetVelocity; //1380
-    public static double targetPos = 0.1;
-    public static double kS = 0, kV = 0.00042727, kP = 0.00092345, bangThreshold = 60;
+    public static double targetPos = 0.34;
+    public static double kS = 0, kV = 0.00082, kP = 0.0092, bangThreshold = 10000;
 
     public double voltage = 12.0;
     private final VoltageSensor battery;

@@ -79,7 +79,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
                     stopper.setPos(0);
-                    intake.setPower(0.93); //0.88
+                    intake.setPower(0.75); //0.88
                 }))
                 .whenInactive(new InstantCommand(() -> {
                     intake.setPower(0);
