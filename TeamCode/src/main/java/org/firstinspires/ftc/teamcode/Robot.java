@@ -34,7 +34,6 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
     public Turret turret;
 
     public static boolean isRedAlliance;
-    private static double intakePower = 1;
     private final Timer loop = new Timer();
 
 
@@ -77,7 +76,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    intake.setPower(intakePower);
+                    intake.setPower(1);
                     stopper.setPos(0);
                 }))
                 .whenInactive(new InstantCommand(() -> {

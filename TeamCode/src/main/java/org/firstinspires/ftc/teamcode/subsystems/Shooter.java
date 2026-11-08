@@ -80,7 +80,7 @@ public class Shooter extends SubsystemBase {
     public void setPower(double p) {
         top.setPower(p);
         bottom.setPower(p);
-    }
+        }
     public double getVoltage(){
         return voltage;
     }
@@ -95,7 +95,6 @@ public class Shooter extends SubsystemBase {
         return getTargetVelocity() > 0
                 && Math.abs(getTargetVelocity() - getCurrentVelocity()) < tolerance;
     }
-
 
     public void setVelocityRED(Pose robotPose, Velocity robotVelocity){
         if (robotPose.y() > 72){
@@ -129,7 +128,7 @@ public class Shooter extends SubsystemBase {
 
         hood.setPosition(safeHoodPos);*/
     }
-    public double getCurrentVelocity(){
+    public double getCurrentVelocity() {
         return top.getVelocity();
     }
     public double getTargetVelocity(){
