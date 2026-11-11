@@ -37,7 +37,7 @@ public class Drive extends CommandOpMode {
             bot.follower.setPose(new Pose(0,0));
             PoseStorage.currentPose = null;
         } else {
-            bot.follower.setPose(Robot.isRedAlliance ? new Pose(54.41722595078299,6.100671140939583, Math.toRadians(0)) : new Pose(0,0,Math.toRadians(180)));
+            bot.follower.setPose(Robot.isRedAlliance ? new Pose(53.51837327158575,5.804706771480996, Math.toRadians(0)) : new Pose(0,0,Math.toRadians(180)));
         }
     }
 

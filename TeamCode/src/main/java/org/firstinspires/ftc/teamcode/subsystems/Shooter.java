@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.utils.LookUpTable;
 import org.firstinspires.ftc.teamcode.utils.RobotConstants;
 import org.firstinspires.ftc.teamcode.utils.SOTM;
@@ -23,8 +24,9 @@ public class Shooter extends SubsystemBase {
     private final LookUpTable storage;
     private double currentDistance;
     public static double targetVelocity; //1380
-    public static double targetPos = 0.34;
-    public static double kS = 0, kV = 0.0004223, kP = 0.0053/*0.0025*/, bangThreshold = 10000/*60*/;
+    public static double targetPos = 0.93;
+    public static double kS = 0, kV = 0.000458381676767, kP = 0.0045/*0.0025*/, bangThreshold = 60/*60*/;
+    private boolean bangBangActive = false;
 
     public double voltage = 12.0;
     private final VoltageSensor battery;
@@ -54,7 +56,6 @@ public class Shooter extends SubsystemBase {
         this.storage = storage;
 
 
-        targetVelocity = 0;
     }
 
     @Override
@@ -69,9 +70,11 @@ public class Shooter extends SubsystemBase {
         double error = getTargetVelocity() - getCurrentVelocity();
 
         if (error > bangThreshold) {
+            bangBangActive = true;
             setPower(1.0);
         }
         else{
+            bangBangActive = false;
             double powerCompensated = (kP * error + kV*getTargetVelocity() + kS) * (12.0/voltage);
             setPower(Math.max(0, Math.min(1,powerCompensated)));
         }
@@ -145,6 +148,12 @@ public class Shooter extends SubsystemBase {
     }
     public double getPowerBottom(){
         return bottom.getPower();
+    }
+    public double getCurrentTop(){
+        return top.getCurrent(CurrentUnit.AMPS);
+    }
+    public double getCurrentBottom(){
+        return bottom.getCurrent(CurrentUnit.AMPS);
     }
     public double getCurrentDistanceShooter(){
         return currentDistance;

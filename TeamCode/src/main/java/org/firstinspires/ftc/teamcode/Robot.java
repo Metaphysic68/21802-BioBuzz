@@ -76,7 +76,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    intake.setPower(1);
+                    intake.setPower(0.95);
                     stopper.setPos(0);
                 }))
                 .whenInactive(new InstantCommand(() -> {
@@ -105,7 +105,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         GamepadButton leftBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.LEFT_BUMPER);
 
-        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.6)))
+        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.55)))
                 .whenInactive(new InstantCommand(() -> flower.setPos(0)));
 
 
@@ -130,7 +130,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
-            turret.setTargetPosition(0.5);
+            turret.setTargetAngleRED(follower.pose(),follower.velocity());
+            shooter.setTargetVelocity(1320);
 
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
@@ -145,6 +146,9 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Off Velocity - Shooter", "%.2f", Math.abs(shooter.getTargetVelocity() -shooter.getCurrentVelocity()));
             telemetry.addData("Power - ShooterT", "%.2f", shooter.getPowerTop());
             telemetry.addData("Power - ShooterB", "%.2f", shooter.getPowerBottom());
+
+            telemetry.addData("Current - ShooterT", "%.2f", shooter.getCurrentTop());
+            telemetry.addData("Current - ShooterB", "%.2f", shooter.getCurrentBottom());
 
 
             telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
