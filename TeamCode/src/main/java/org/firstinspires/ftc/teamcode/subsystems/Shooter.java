@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Velocity;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,9 +24,9 @@ public class Shooter extends SubsystemBase {
     private final Servo hood;
     private final LookUpTable storage;
     private double currentDistance;
-    public static double targetVelocity; //1380
-    public static double targetPos = 0.93;
-    public static double kS = 0, kV = 0.000458381676767, kP = 0.0045/*0.0025*/, bangThreshold = 60/*60*/;
+    public static double targetVelocity; //1280
+    public static double targetPos = 0.45 ;
+    public static double kS = 0, kV = 0.00045677777, kP = 0.00325/*0.0025*/, bangThreshold = 100000/*60*/;
     private boolean bangBangActive = false;
 
     public double voltage = 12.0;
@@ -118,7 +119,7 @@ public class Shooter extends SubsystemBase {
         currentDistance = goal.distance(robotPose);
 
         Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity,storage.getTime(currentDistance));
-        double virtualDistance = goal.distance(virtualPose);
+        double virtualDistance = goal.distance(robotPose);
 
         setTargetVelocity(storage.getRPM(virtualDistance));
         setPos(storage.getHood(virtualDistance));
@@ -127,7 +128,7 @@ public class Shooter extends SubsystemBase {
 
         double targetServoPos = (-3e-5 * Math.pow(virtualDistance, 2)) + (0.0123 * virtualDistance) - 0.4772;
         targetPos = targetServoPos;
-        double safeHoodPos = Range.clip(targetServoPos, 0, 0.8);
+        double safeHoodPos = Range.clip(targetServoPos, 0, 0.45);
 
         hood.setPosition(safeHoodPos);*/
     }
@@ -155,8 +156,28 @@ public class Shooter extends SubsystemBase {
     public double getCurrentBottom(){
         return bottom.getCurrent(CurrentUnit.AMPS);
     }
-    public double getCurrentDistanceShooter(){
+    public double getCurrentDistanceRedShooter(Pose robotPose){
+
+        if (robotPose.y() > 72){
+            Pose goalRight = RobotConstants.RED_GOAL_RIGHT;
+            currentDistance = goalRight.distance(robotPose);
+        } else {
+            Pose goalRight = RobotConstants.RED_GOAL_RIGHT;
+            currentDistance = goalRight.distance(robotPose);        }
+
         return currentDistance;
     }
+    public double getCurrentDistanceBlueShooter(Pose robotPose){
+
+        if (robotPose.y() > 72){
+            Pose goalRight = RobotConstants.BLUE_GOAL_RIGHT;
+            currentDistance = goalRight.distance(robotPose);
+        } else {
+            Pose goalRight = RobotConstants.BLUE_GOAL_LEFT;
+            currentDistance = goalRight.distance(robotPose);        }
+
+        return currentDistance;
+    }
+
 
 }

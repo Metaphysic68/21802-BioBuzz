@@ -24,7 +24,7 @@ public class TwoTipBLUE extends SequentialCommandGroup {
 
     private final PoseFactory poseFactory = PoseFactory.degrees().mirrorY(70.75).mirrorX(70.75);
     private final Pose intakeSideStart = poseFactory.of(54.4172, 6, 180);
-    private final Pose intakeSide = poseFactory.of(8, 6, 180);
+    private final Pose intakeSide = poseFactory.of(10, 6, 180);
     private final Pose secondTip1 = poseFactory.of(55.2953, 118.7919, -178.1826);
     private final Pose secondTip1Control1 = poseFactory.of(33.3154, 118.6566, 0);
     private final Pose flowerIntake1 = poseFactory.of(47.3009, 129.7416, 90.1435);
@@ -70,7 +70,7 @@ public class TwoTipBLUE extends SequentialCommandGroup {
     public TwoTipBLUE(Follower f, Intake i, Stopper s, Flower fl) {
 
         addCommands(
-                new WaitCommand(500),
+                new WaitCommand(2000),
                 new ShootCommand(s,i),
                 new InstantCommand(()->i.setPower(1)),
                 new FollowPathCommand(f,intakeSide()),

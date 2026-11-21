@@ -8,51 +8,26 @@ public class LookUpTable {
     InterpLUT time = new InterpLUT();
     public LookUpTable(){
 
-        // New values from firm table
-        rpm.add(42.45, 2610);
-        hood.add(42.45, 0.4);
-        time.add(42.45, 0.46);
+        rpm.add(26.8622, 1220);
+        hood.add(26.8622, 0.33);
+        time.add(26.8622, 0.95);
+
+        rpm.add(36.0094, 1240);
+        hood.add(36.0094, 0.4);
+        time.add(36.0094, 0.93);
+
+        rpm.add(46.8638, 1280);
+        hood.add(46.8638, 0.45);
+        time.add(46.8638, 0.95);
+
+        rpm.add(55.0981, 1300);
+        hood.add(55.0981, 0.49);
+        time.add(55.0981, 0.79);
 
 
-        rpm.add(52.11, 2710);
-        hood.add(52.11, 0.34);
-        time.add(52.11, 0.51);
-
-
-        rpm.add(62.5, 2810);
-        hood.add(62.5, 0.3);
-        time.add(62.5, 0.56);
-
-
-        rpm.add(72.44, 2920);
-        hood.add(72.44, 0.25);
-        time.add(72.44, 0.61);
-
-
-        rpm.add(85.88, 3060);
-        hood.add(85.88, 0.21);
-        time.add(85.88, 0.67);
-
-
-        rpm.add(107.53, 3240);
-        hood.add(107.53, 0.18);
-        time.add(107.53, 0.74);
-
-
-        rpm.add(124.86, 3500);
-        hood.add(124.86, 0.17);
-        time.add(124.86, 0.82);
-
-
-        rpm.add(145.5, 3800);
-        hood.add(145.5, 0.17);
-        time.add(145.5, 0.92);
-
-
-        rpm.add(155.2, 3900);
-        hood.add(155.2, 0.17);
-        time.add(155.2, 0.97);
-
+        rpm.add(63.0217, 1340);
+        hood.add(63.0217, 0.51);
+        time.add(63.0217, 0.86);
 
 
         rpm.createLUT();

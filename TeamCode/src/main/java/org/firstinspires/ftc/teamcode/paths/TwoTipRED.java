@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.paths;
 
 
+import com.pedropathing.api.Paths;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import static com.pedropathing.api.Paths.*;
@@ -24,84 +25,94 @@ public class TwoTipRED extends SequentialCommandGroup {
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose intakeSideStart = poseFactory.of(54.4172, 6, 180);
-    private final Pose intakeSide = poseFactory.of(8, 6, 180);
-    private final Pose secondTip1 = poseFactory.of(55.2953, 118.7919, -178.1826);
-    private final Pose secondTip1Control1 = poseFactory.of(33.3154, 118.6566, 0);
-    private final Pose flowerIntake1 = poseFactory.of(47.3009, 129.7416, 90.1435);
-    private final Pose flowerIntake1Control1 = poseFactory.of(47.3249, 104.0674, 0);
-    private final Pose secondTip2 = poseFactory.of(55.2953, 118.7919, -90.1);
-    private final Pose secondTip2Control1 = poseFactory.of(55.3166, 107.7852, 0);
-    private final Pose flowerIntake2 = poseFactory.of(14.0492, 47.1655, -178.2204);
-    private final Pose flowerIntake2Control1 = poseFactory.of(13.6029, 118.67, 0);
-    private final Pose flowerIntake2Control2 = poseFactory.of(40.8333, 47.2729, 0);
-    private final Pose secondTip3 = poseFactory.of(55.5101, 118.6409, -178.9862);
-    private final Pose secondTip3Control1 = poseFactory.of(21.5391, 118.3971, 0);
-    private final Pose parkStart = poseFactory.of(55.5101, 118.6409, 180);
-    private final Pose park = poseFactory.of(11.2377, 109.7654, 180);
+    private final Pose start = poseFactory.of(52.6736, 7.0458, 90);
+    private final Pose intakeSide = poseFactory.of(8, 8, 270);
+    private final Pose intakeSideControl1 = poseFactory.of(27.106, 80.7713, 0);
+    private final Pose shoot2 = poseFactory.of(58.6541, 131.7953, -90.0337);
+    private final Pose shoot2Control1 = poseFactory.of(30.4181, 136.6372, 0);
+    private final Pose shoot2Control2 = poseFactory.of(58.6366, 102.0651, 0);
+    private final Pose flower1 = poseFactory.of(46.7574, 125.107, 89.5404);
+    private final Pose flower1Control1 = poseFactory.of(46.5461, 98.7601, 0);
+    private final Pose shoot3 = poseFactory.of(57.8916, 131.2542, -90.1193);
+    private final Pose shoot3Control1 = poseFactory.of(57.8275, 100.4671, 0);
+    private final Pose flower2 = poseFactory.of(15.2715, 46.2036, 179.6326);
+    private final Pose flower2Control1 = poseFactory.of(21.6455, 117.3189, 0);
+    private final Pose flower2Control2 = poseFactory.of(35.8972, 46.0713, 0);
+    private final Pose shoot3_2 = poseFactory.of(59.3112, 132.8861, -87.5007);
+    private final Pose shoot3_2Control1 = poseFactory.of(19.6052, 100.1118, 0);
+    private final Pose shoot3_2Control2 = poseFactory.of(60.4272, 107.3162, 0);
+    private final Pose pushStart = poseFactory.of(59.3112, 132.8861, -90);
+    private final Pose push = poseFactory.of(7.22, 68.6731, 270);
+    private final Pose push2 = poseFactory.of(7.22, 102.7686, -90);
 
     public Path intakeSide() {
-        return line(intakeSideStart, intakeSide).linear(intakeSideStart, intakeSide);
+        return Paths.curve(start, intakeSideControl1, intakeSide).linear(start, intakeSide);
     }
 
-    public Path secondTip1() {
-        return curve(intakeSide, secondTip1Control1, secondTip1).reverseTangent();
+    public Path shoot2() {
+        return Paths.curve(intakeSide, shoot2Control1, shoot2Control2, shoot2).reverseTangent();
     }
 
-    public Path flowerIntake1() {
-        return curve(secondTip1, flowerIntake1Control1, flowerIntake1).tangent();
+    public Path flower1() {
+        return Paths.curve(shoot2, flower1Control1, flower1).tangent();
     }
 
-    public Path secondTip2() {
-        return curve(flowerIntake1, secondTip2Control1, secondTip2).reverseTangent();
+    public Path shoot3() {
+        return Paths.curve(flower1, shoot3Control1, shoot3).reverseTangent();
     }
 
-    public Path flowerIntake2() {
-        return curve(secondTip2, flowerIntake2Control1, flowerIntake2Control2, flowerIntake2).tangent();
+    public Path flower2() {
+        return Paths.curve(shoot3, flower2Control1, flower2Control2, flower2).tangent();
     }
 
-    public Path secondTip3() {
-        return curve(flowerIntake2, secondTip3Control1, secondTip3).reverseTangent();
+    public Path shoot4() {
+        return Paths.curve(flower2, shoot3_2Control1, shoot3_2Control2, shoot3_2).reverseTangent();
     }
 
-    public Path park() {
-        return line(parkStart, park).linear(parkStart, park);
+    public Path push() {
+        return Paths.line(pushStart, push).linear(pushStart, push);
+    }
+
+    public Path push2() {
+        return Paths.line(push, push2).reverseTangent();
     }
 
     public TwoTipRED(Follower f, Intake i, Stopper s, Flower fl) {
         addCommands(
-                new WaitCommand(500),
+                new WaitCommand(3500),
                 new ShootCommand(s,i),
                 new InstantCommand(()->i.setPower(1)),
                 new FollowPathCommand(f,intakeSide()),
                 new WaitCommand(500),
                 new InstantCommand(()->i.setPower(1)),
-                new FollowPathCommand(f,secondTip1()),
+                new FollowPathCommand(f,shoot2()),
                 new ShootCommand(s,i),
                 new ParallelCommandGroup(
                         new InstantCommand(()->i.setPower(1)),
                         new InstantCommand(()->fl.setPos(0.425)),
-                        new FollowPathCommand(f,flowerIntake1()),
+                        new FollowPathCommand(f,flower1()),
                         new WaitCommand(1000)
 
                         ),
                 new InstantCommand(()->fl.setPos(0)),
                 new InstantCommand(()->i.setPower(1)),
-                new FollowPathCommand(f,secondTip2()),
+                new FollowPathCommand(f,shoot3()),
                 new ShootCommand(s,i),
                 new ParallelCommandGroup(
                         new InstantCommand(()->i.setPower(1)),
                         new InstantCommand(()->fl.setPos(0.425)),
-                        new FollowPathCommand(f,flowerIntake2()),
+                        new FollowPathCommand(f,flower2()),
                         new WaitCommand(1000)
 
                 ),
                 new InstantCommand(()->fl.setPos(0)),
                 new InstantCommand(()->i.setPower(1)),
-                new FollowPathCommand(f,secondTip3()),
+                new FollowPathCommand(f,shoot4()),
                 new ShootCommand(s,i),
                 new InstantCommand(()->i.setPower(0)),
-                new FollowPathCommand(f,park())
+                new FollowPathCommand(f,push()),
+                new FollowPathCommand(f,push2())
+
 
 
                 );

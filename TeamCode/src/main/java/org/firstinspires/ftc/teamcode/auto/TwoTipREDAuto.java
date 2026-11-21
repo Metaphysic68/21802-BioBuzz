@@ -24,7 +24,7 @@ public class TwoTipREDAuto extends LinearOpMode {
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
         bot.isRedAlliance = true;
 
-        bot.follower.setPose(new Pose(54.4172, 6, Math.toRadians(180)));
+        bot.follower.setPose(new Pose(52.6736, 7.0458, Math.toRadians(90)));
 
         waitForStart();
 

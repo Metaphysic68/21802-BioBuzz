@@ -15,7 +15,7 @@ public class ShootCommand extends SequentialCommandGroup {
                     stopper.setPos(0);
                     intake.setPower(1);
                 }),
-                new WaitCommand(250),
+                new WaitCommand(500),
                 new InstantCommand(() -> {
                     intake.setPower(0);
                     stopper.setPos(1);

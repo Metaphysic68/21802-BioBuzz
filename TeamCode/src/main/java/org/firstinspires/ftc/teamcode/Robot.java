@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Velocity;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -76,7 +77,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    intake.setPower(0.95);
+                    intake.setPower(1);
                     stopper.setPos(0);
                 }))
                 .whenInactive(new InstantCommand(() -> {
@@ -131,7 +132,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 loops = 0;
             }
             turret.setTargetAngleRED(follower.pose(),follower.velocity());
-            shooter.setTargetVelocity(1320);
+            shooter.setVelocityRED(follower.pose(), follower.velocity());
+
 
             telemetry.addData("Current Velocity - Shooter","%.2f",shooter.getCurrentVelocity());
             telemetry.addData("Target Velocity - Shooter","%.2f", shooter.getTargetVelocity());
@@ -150,6 +152,10 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Current - ShooterT", "%.2f", shooter.getCurrentTop());
             telemetry.addData("Current - ShooterB", "%.2f", shooter.getCurrentBottom());
 
+            telemetry.addData("Distance RED", shooter.getCurrentDistanceRedShooter(follower.pose()));
+            telemetry.addData("Distance BLUE", shooter.getCurrentDistanceBlueShooter(follower.pose()));
+
+
 
             telemetry.addData("Current Pos - Hood", "%.2f",shooter.getHoodPos());
             telemetry.addData("Target Pos - Hood", "%.2f",shooter.getTargetPos());
@@ -158,6 +164,8 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
             telemetry.addData("Turret Degrees", turret.getTargetAngle());
 
             telemetry.addData("Voltage", shooter.getVoltage());
+            telemetry.addData("Velocity Robot", follower.velocity());
+
 
 
             telemetry.update();
