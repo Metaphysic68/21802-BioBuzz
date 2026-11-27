@@ -44,7 +44,7 @@ public class LookUpTable {
         hood.add(56.3812, 0.4);
         time.add(56.3812, 0.93);
 
-        rpm.add(60.4544, 13690);
+        rpm.add(60.4544, 1360);
         hood.add(60.4544, 0.43);
         time.add(60.4544, 0.93);
 
