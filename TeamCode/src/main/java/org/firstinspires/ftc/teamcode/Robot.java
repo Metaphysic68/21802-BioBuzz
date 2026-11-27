@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Pose;
 import com.pedropathing.math.Velocity;
 import com.pedropathing.utils.Timer;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -77,7 +78,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         new Trigger(() -> DriverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5)
                 .whenActive(new InstantCommand(() -> {
-                    intake.setPower(1);
+                    intake.setPower(0.987);
                     stopper.setPos(0);
                 }))
                 .whenInactive(new InstantCommand(() -> {
@@ -106,11 +107,14 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
 
         GamepadButton leftBumper = new GamepadButton(DriverGamepad, GamepadKeys.Button.LEFT_BUMPER);
 
-        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.55)))
+        leftBumper.whenActive(new InstantCommand(() -> flower.setPos(0.5)))
                 .whenInactive(new InstantCommand(() -> flower.setPos(0)));
 
+//40.49387
 
+        GamepadButton dPadRight = new GamepadButton(DriverGamepad, GamepadKeys.Button.DPAD_RIGHT);
 
+        dPadRight.whenActive(new InstantCommand(() ->   follower.setPose( isRedAlliance ?new Pose(40.6893, 60.5253,0) : new Pose(141.5-40.6893, 141.5-60.5253,0)))  );
     }
 
     public double getLoopTimeHz() {
@@ -131,6 +135,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 lastLoop = now;
                 loops = 0;
             }
+
             turret.setTargetAngleRED(follower.pose(),follower.velocity());
             shooter.setVelocityRED(follower.pose(), follower.velocity());
 

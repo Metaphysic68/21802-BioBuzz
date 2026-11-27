@@ -26,6 +26,8 @@ public class Turret extends SubsystemBase {
     public static class TurretConstants {
         public static double servoRange = 320;
         public static double centerOffsetDegrees = 0;
+        public static double pivotOffsetX = -1.81;
+        public static double pivotOffsetY = 0.0;
     }
 
     public Turret(HardwareMap hardwareMap, LookUpTable storage) {
@@ -54,8 +56,10 @@ public class Turret extends SubsystemBase {
     private void setAngle(Pose goal, Pose robotPose, Velocity robotVelocity){
         Pose virtualPose = SOTM.calculateVirtualRobot(robotPose, robotVelocity,storage.getTime(goal.distance(robotPose)));
 
-        double fieldRadians = Math.atan2(goal.y() - robotPose.y(), goal.x() - robotPose.x());
-        double angleDegrees = Math.toDegrees(fieldRadians - robotPose.heading());
+        Pose turretPose = getTurretPose(robotPose);
+
+        double fieldRadians = Math.atan2(goal.y() - turretPose.y(), goal.x() - turretPose.x());
+        double angleDegrees = Math.toDegrees(fieldRadians - turretPose.heading());
 
         while (angleDegrees > 180) angleDegrees -= 360;
         while (angleDegrees <= -180) angleDegrees += 360;
@@ -74,6 +78,16 @@ public class Turret extends SubsystemBase {
         turret.setPosition(targetPosition);
         turret2.setPosition(targetPosition);
 
+    }
+
+    /** Field position of the turret pivot, from Pedro's pose rotated by heading. */
+    private Pose getTurretPose(Pose robotPose) {
+        double h = robotPose.heading();
+        double cos = Math.cos(h);
+        double sin = Math.sin(h);
+        double x = robotPose.x() + TurretConstants.pivotOffsetX * cos - TurretConstants.pivotOffsetY * sin;
+        double y = robotPose.y() + TurretConstants.pivotOffsetX * sin + TurretConstants.pivotOffsetY * cos;
+        return new Pose(x, y, h);
     }
 
     public double getTargetAngle(){

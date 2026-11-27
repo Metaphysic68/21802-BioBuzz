@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
     private final LookUpTable storage;
     private double currentDistance;
     public static double targetVelocity; //1280
-    public static double targetPos = 0.45 ;
-    public static double kS = 0, kV = 0.00045677777, kP = 0.00325/*0.0025*/, bangThreshold = 100000/*60*/;
+    public static double targetPos;
+    public static double kS = 0, kV = 0.00045677777, kP = 0.00385/*0.00325*/, bangThreshold = 100000/*60*/;
     private boolean bangBangActive = false;
 
     public double voltage = 12.0;
@@ -61,13 +61,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic(){
-
-
         voltage = battery.getVoltage();
-
-
-        hood.setPosition(targetPos);
-
         double error = getTargetVelocity() - getCurrentVelocity();
 
         if (error > bangThreshold) {

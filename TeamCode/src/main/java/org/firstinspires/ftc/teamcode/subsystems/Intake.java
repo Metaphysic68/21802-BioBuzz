@@ -18,6 +18,8 @@ public class Intake extends SubsystemBase {
     private final DigitalChannel laserInput;
     private final Timer timer;
     private final Servo light;
+    private final Servo light2;
+
 
     public Intake(HardwareMap hMap) {
         timer = new Timer();
@@ -33,6 +35,9 @@ public class Intake extends SubsystemBase {
         light = hMap.get(Servo.class,"led1");
         light.setPosition(0.72);
 
+        light2 = hMap.get(Servo.class,"led2");
+        light2.setPosition(0.72);
+
     }
     @Override
     public void periodic(){
@@ -41,12 +46,17 @@ public class Intake extends SubsystemBase {
         if (detected) {
             if (timer.milliseconds() > 150) {
                 light.setPosition(0.5);
+                light2.setPosition(0.5);
             } else {
                 light.setPosition(0.333);
+                light2.setPosition(0.333);
+
             }
         } else {
             timer.reset();
             light.setPosition(0.333);
+            light2.setPosition(0.333);
+
         }
     }
 

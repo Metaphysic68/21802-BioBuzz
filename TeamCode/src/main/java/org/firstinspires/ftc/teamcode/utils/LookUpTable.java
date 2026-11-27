@@ -8,26 +8,51 @@ public class LookUpTable {
     InterpLUT time = new InterpLUT();
     public LookUpTable(){
 
-        rpm.add(26.8622, 1220);
-        hood.add(26.8622, 0.33);
-        time.add(26.8622, 0.95);
-
-        rpm.add(36.0094, 1240);
-        hood.add(36.0094, 0.4);
-        time.add(36.0094, 0.93);
-
-        rpm.add(46.8638, 1280);
-        hood.add(46.8638, 0.45);
-        time.add(46.8638, 0.95);
-
-        rpm.add(55.0981, 1300);
-        hood.add(55.0981, 0.49);
-        time.add(55.0981, 0.79);
 
 
-        rpm.add(63.0217, 1340);
-        hood.add(63.0217, 0.51);
-        time.add(63.0217, 0.86);
+
+       /* rpm.add(27.3097, 1180);
+        hood.add(27.3097, 0.295); //FUNCIONAL
+        time.add(27.3097, 0.93);
+
+
+        rpm.add(30.287, 1200);
+        hood.add(30.287, 0.35); //FUNCIONAL
+        time.add(30.287, 0.93);
+
+        rpm.add(37.1246, 1220);
+        hood.add(37.1246, 0.4254);//FUNCIONAL
+        time.add(37.1246, 0.93);
+
+        /*rpm.add(45.8520, 1240);
+        hood.add(45.8520, 0.479);  //FUNCIONAL
+        time.add(45.8520, 0.93);*/
+
+        rpm.add(35.6085, 1220);
+        hood.add(35.6085, 0.28);
+        time.add(35.6085, 0.93);
+
+        rpm.add(44.863, 1240);
+        hood.add(44.863, 0.33);
+        time.add(44.863, 0.93);
+
+        rpm.add(50.8468, 1280);
+        hood.add(50.8468, 0.38);
+        time.add(50.8468, 0.93);
+
+        rpm.add(56.3812, 1340);
+        hood.add(56.3812, 0.4);
+        time.add(56.3812, 0.93);
+
+        rpm.add(60.4544, 13690);
+        hood.add(60.4544, 0.43);
+        time.add(60.4544, 0.93);
+
+        /*rpm.add(50.8777, 1280);
+        hood.add(50.8777, 0.545); /FUNCIONAL
+        time.add(50.8777, 0.95);*/
+
+
 
 
         rpm.createLUT();

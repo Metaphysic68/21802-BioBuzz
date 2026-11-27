@@ -36,9 +36,9 @@ public class Constants {
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");
         c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        c.xPodOffset.set(1.094879841241311);
-        c.yPodOffset.set(-6.3867589995617005);
-        c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        c.xPodOffset.set(0.9180566832775207);
+        c.yPodOffset.set(-4.60193063304626);
+        c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
@@ -47,10 +47,10 @@ public class Constants {
 
     public static ForesightConfig foresightConfig = new ForesightConfig(
             c -> {
-                Controller primaryTranslationalForward = Controller.proportional(0.31938461455936845);
-                Controller secondaryTranslationalForward = Controller.proportional(0.1180040809656106);
-                Controller primaryTranslationalLateral = Controller.proportional(0.48071587718961434);
-                Controller secondaryTranslationalLateral = Controller.proportional(0.17761167165675493);
+                Controller primaryTranslationalForward = Controller.proportional(0.21938461455936845);
+                Controller secondaryTranslationalForward = Controller.proportional(0.0580040809656106);
+                Controller primaryTranslationalLateral = Controller.proportional(0.24071587718961434);
+                Controller secondaryTranslationalLateral = Controller.proportional(0.08761167165675493);
 
                 c.forwardTranslational.set(Controller.piecewise(secondaryTranslationalForward).put(2.5, primaryTranslationalForward));
                 c.strafeTranslational.set(Controller.piecewise(secondaryTranslationalLateral).put(2.5, primaryTranslationalLateral));
@@ -68,6 +68,7 @@ public class Constants {
                 c.maxAchievableStrafeVelocity.set(55.6934794419141);
                 c.naturalForwardDeceleration.set(40.789731273344515);
                 c.naturalStrafeDeceleration.set(69.04906191220485);
+
             }
     );
     public static Follower create(HardwareMap h) {

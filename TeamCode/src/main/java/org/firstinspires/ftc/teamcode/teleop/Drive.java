@@ -33,12 +33,17 @@ public class Drive extends CommandOpMode {
 
         Robot.isRedAlliance = PoseStorage.isRedAlliance;
 
-        if (PoseStorage.currentPose != null) {
-            bot.follower.setPose(new Pose(0,0));
-            PoseStorage.currentPose = null;
+        Pose startPose;
+        if (PoseStorage.hasPose()) {
+            // Pose handed off from auto (or a previous teleop run if this one was restarted)
+            startPose = PoseStorage.currentPose;
+            telem.addData("Start pose", "FROM AUTO %s", startPose);
         } else {
-            bot.follower.setPose(Robot.isRedAlliance ? new Pose(52.67364199577121,7.045788406232082, Math.toRadians(90)) : new Pose(0,0,Math.toRadians(180)));
+            startPose = Robot.isRedAlliance ? new Pose(52.6736,7.0458, Math.toRadians(90)) : new Pose(141.5-52.67364199577121,141.5-7.045788406232082,Math.toRadians(270));
+            telem.addData("Start pose", "DEFAULT %s", startPose);
         }
+        bot.follower.setPose(startPose);
+        telem.update();
     }
 
     @Override
@@ -49,6 +54,8 @@ public class Drive extends CommandOpMode {
 
         bot.run();
 
+        // Keep the stored pose current so restarting teleop mid-match resumes from here
+        PoseStorage.save(bot.follower.pose());
 
         double fwd;
         double lat;
