@@ -76,7 +76,7 @@ public class Turret extends SubsystemBase {
 
         targetPosition = clamp(pos,0,1);
         turret.setPosition(targetPosition);
-        turret2.setPosition(targetPosition);
+        turret2.setPosition(targetPosition );
 
     }
 

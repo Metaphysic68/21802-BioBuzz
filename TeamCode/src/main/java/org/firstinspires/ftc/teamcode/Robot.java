@@ -80,6 +80,7 @@ public class Robot extends com.seattlesolvers.solverslib.command.Robot {
                 .whenActive(new InstantCommand(() -> {
                     intake.setPower(0.987);
                     stopper.setPos(0);
+
                 }))
                 .whenInactive(new InstantCommand(() -> {
                     intake.setPower(0);

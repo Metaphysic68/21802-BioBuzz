@@ -25,10 +25,8 @@ public class TwoTipBLUEAuto extends LinearOpMode {
         Robot bot = new Robot(hardwareMap, telemetry, new GamepadEx(gamepad1), new GamepadEx(gamepad2));
         bot.isRedAlliance = false;
 
-        // Same start as TwoTipRED, mirrored through (70.75, 70.75) to match the TwoTipBLUE path
         Pose startPose = new Pose(87.0828, 135.5, Math.toRadians(270));
         bot.follower.setPose(startPose);
-        // Saved now so teleop has a pose even if auto is stopped before it starts
         PoseStorage.save(startPose);
 
         waitForStart();
@@ -40,7 +38,6 @@ public class TwoTipBLUEAuto extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             bot.run();
 
-            // Saved every loop so a canceled auto still hands off its latest pose
             PoseStorage.save(bot.follower.pose());
         }
 

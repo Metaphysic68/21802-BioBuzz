@@ -26,7 +26,6 @@ public class TwoTipREDAuto extends LinearOpMode {
 
         Pose startPose = new Pose(52.67364199577121, 7.045788406232082, Math.toRadians(90));
         bot.follower.setPose(startPose);
-        // Saved now so teleop has a pose even if auto is stopped before it starts
         PoseStorage.save(startPose);
 
         waitForStart();
@@ -38,7 +37,6 @@ public class TwoTipREDAuto extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             bot.run();
 
-            // Saved every loop so a canceled auto still hands off its latest pose
             PoseStorage.save(bot.follower.pose());
         }
 
